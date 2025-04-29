@@ -1,0 +1,23 @@
+{
+  "name": "aseprite-wizard-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Docs for Godot's Aseprite Wizard plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --import tsx --test --enable-source-maps --test-reporter node-test-reporter",
+    "build": "node --import tsx generator/index.ts"
+  },
+  "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^15.0.11",
+    "marked-gfm-heading-id": "^4.1.1",
+    "tsx": "^4.19.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "mock-fs": "^5.5.0",
+    "node-test-reporter": "^1.1.0"
+  }
+}
