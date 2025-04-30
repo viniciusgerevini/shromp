@@ -86,3 +86,7 @@ export async function createFile(filePath: string, content: string): Promise<voi
 	await createFolderIfRequired(path.dirname(filePath));
 	await writeFile(filePath, content);
 }
+
+export async function listFilesInDir(dirPath: string): Promise<string[]> {
+	return readdir(dirPath);
+}

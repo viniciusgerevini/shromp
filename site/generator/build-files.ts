@@ -3,6 +3,7 @@ import * as path from "node:path";
 import { ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
 import { createFile } from "./files.ts";
+import Templates from "./templates.ts";
 
 // TODO maybe use dotenv for config
 
@@ -14,10 +15,29 @@ interface ContentData {
 
 type ContentCache = { [key:string]: ContentData };
 
+interface NavigationLink {
+	title: string;
+	path: string;
+	level: number;
+	children?: NavigationLink[];
+}
+
+type NavigationLinksForLocale = {[locale: string]: NavigationLink };
+
 export async function createSiteFromContent(content: ContentNode): Promise<void> {
 	const contentCache: ContentCache = {};
 
-	const navigationLinksByLocale: {[locale: string]: NavigationLink} = {};
+	const navigationLinksByLocale = createNavigationTree(content, contentCache);
+
+	// TODO compile CSS
+	// TODO compile JS
+
+	await createPages(contentCache, navigationLinksByLocale);
+}
+
+
+function createNavigationTree(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
+	const navigationLinksByLocale: NavigationLinksForLocale = {};
 
 	for (let localeFolder of content.nestedContent) {
 		const rootContent: ContentNode = {
@@ -37,7 +57,6 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 		}
 
 		// TODO: clean version folder before generating new files
-		console.log(localeFolder.pathSection);
 
 		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
 			content: rootContent,
@@ -48,28 +67,7 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 		});
 	}
 
-	for (const [key, value] of Object.entries(contentCache)) {
-		console.log(key, value.content.slice(0, 5));
-		await createPageFile(key, value, navigationLinksByLocale[value.locale]);
-	}
-
-	// TODO:
-	// create navigation tree and link mappings
-	// replace markdown links to final ones
-	//    - OK this is nasty, because at this point we don't have access to the source
-	//    anymore. Probably this should be done in the content conversion step.
-	//    here is my current idea
-	//     - markdown files are linked to the actual markdown file
-	//     - on convertion, generate an reference id for each file (this is important to unify relative paths)
-	//     - on this step, map reference ids to original path, and replace them when inserting content
-}
-
-
-interface NavigationLink {
-	title: string;
-	path: string;
-	level: number;
-	children?: NavigationLink[];
+	return navigationLinksByLocale;
 }
 
 
@@ -106,10 +104,29 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 	};
 }
 
-async function createPageFile(filePath: string, content: ContentData, navigation: NavigationLink) {
-	// TODO generate content from template
-	// TODO use handlebars templates
-	console.log(config.output_folder);
-	await createFile(path.join(config.output_folder, filePath), content.content);
-	// TODO create folders for file path
+async function createPages(contentCache: ContentCache, navigationLinksByLocale: NavigationLinksForLocale) {
+	const templates = await Templates();
+
+	for (const [filePath, content] of Object.entries(contentCache)) {
+		console.log("Generating page ", filePath);
+		// TODO: maybe provide a way for page to set a different template based on metadata
+		const template = await templates.getTemplate("page");
+		const pageContent = template({
+			mainContent: content.content,
+			navigationMenu: navigationLinksByLocale[content.locale],
+			locale: content.locale,
+			version: content.version
+		});
+		await createFile(path.join(config.output_folder, filePath), pageContent);
+	}
 }
+
+// TODO:
+// create navigation tree and link mappings
+// replace markdown links to final ones
+//    - OK this is nasty, because at this point we don't have access to the source
+//    anymore. Probably this should be done in the content conversion step.
+//    here is my current idea
+//     - markdown files are linked to the actual markdown file
+//     - on convertion, generate an reference id for each file (this is important to unify relative paths)
+//     - on this step, map reference ids to original path, and replace them when inserting content

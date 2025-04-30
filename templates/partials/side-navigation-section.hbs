@@ -1,0 +1,16 @@
+
+{{!-- title: string; --}}
+{{!-- path: string; --}}
+{{!-- level: number; --}}
+{{!-- children?: NavigationLink[]; --}}
+
+<li class="nav-level-{{level}}">
+    <a href="{{path}}">{{title}}</a>
+    {{#if children }}
+      <ul>
+        {{#each children}}
+           {{> side-navigation-section }}
+        {{/each}}
+      </ul>
+    {{/if}}
+</li>

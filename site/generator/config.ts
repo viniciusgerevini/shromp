@@ -14,7 +14,8 @@ export default {
   /**
    * Folder where generated HTML should be saved
    */
-  output_folder: "../dist/",
+  // output_folder: "../dist/",
+  output_folder: "../public/",
   /**
    * Overwrite base URL. Useful when hosting files in any location other than the
    * root
@@ -32,4 +33,6 @@ export default {
   // stableVersion
   // TODO
   // latestVersion
+  templatesFolder: "../templates",
+  defaultPageTemplate: "page.hbs",
 }
