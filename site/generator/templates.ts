@@ -5,6 +5,7 @@ import config from "./config.ts";
 import { listFilesInDir, readFileContent } from "./files.ts";
 
 export default async function templates() {
+  registerHelpers();
 	await loadPartials();
 
 	const templates: {[templateName: string]: HandlebarsTemplateDelegate} = {};
@@ -32,39 +33,27 @@ async function loadPartials() {
 	}
 }
 
-// function registerHelpers() {
-	// Handlebars.registerHelper("sideNavigation", (links: any) {
-	// 	console.log("links");
-	// });
-  // handlebars.registerHelper('fullUrl', (uri) => {
-  //   return `${config.get('base_url')}${uri || ''}`
-  // });
-	//
-  // handlebars.registerHelper('pagination', (currentPage, numberOfPages, base) => {
-  //   if (numberOfPages < 2) {
-  //     return ''
-  //   }
-  //   const baseUrl = base ? `${base}/` : '/'
-  //   const link = (number) => number < 1 ? baseUrl: `${baseUrl}page/${number}`
-  //   const links = []
-  //   let prev = ''
-  //   let next = ''
-  //
-  //   if (currentPage > 1) {
-  //     prev = `<a class="prev" href="${link(currentPage - 1)}">&larr; Prev</a>`
-  //   }
-  //
-  //   if (currentPage < numberOfPages) {
-  //     next = `<a class="next" href="${link(currentPage + 1)}">Next &rarr;</a>`
-  //   }
-  //
-  //   for (let i = 1; i < numberOfPages + 1; i++) {
-  //     links.push(`<a class="${i === currentPage ? 'current' : ''}" href="${link(i)}">${i}</a>`)
-  //   }
-  //
-  //   return `<nav class="pagination" role="navigation">${prev}<div class="page-nums">${links.join('')}</div>${next}</nav>`
-  // });
-  // handlebars.registerHelper('isodd', (value) => {
-  //   return value % 2 !== 0;
-  // });
-// }
+function registerHelpers() {
+	Handlebars.registerHelper("getNavCurrentState", (navLink: string, currentFile: string) => {
+		// skip anchors as they can't be expanded
+		if (navLink.includes("#")) {
+			return "no-expand";
+		}
+
+		const navLinkWithoutIndex = navLink.replace("/index.html", "");
+		const currentFileWithoutIndex = currentFile.replace("/index.html", "");
+
+		if (currentFileWithoutIndex.split("/").length === 2) {
+			return;
+		}
+
+		if (currentFileWithoutIndex.includes(navLinkWithoutIndex)) {
+			return "expanded loaded-expanded";
+		}
+		return "collapsed";
+	});
+
+	Handlebars.registerHelper("getNavClassWhenCurrent", function (navLink: string, currentFile: string) {
+		return navLink === currentFile ? "current" : "";
+	});
+}

@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import { ContentNode } from "./content-convertion.ts";
+import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
 import { createFile } from "./files.ts";
 import Templates from "./templates.ts";
@@ -29,9 +29,6 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 	const navigationLinksByLocale = createNavigationTree(content, contentCache);
 
-	// TODO compile CSS
-	// TODO compile JS
-
 	await createPages(contentCache, navigationLinksByLocale);
 }
 
@@ -49,14 +46,9 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			isIndex: localeFolder.isIndex,
 		};
 
-		// TODO should support version folders?
-		// - version folders should ignore version to publish
-		// - maybe implement a single-version, mult-version source prop
 		if (config.versionToPublish) {
 			rootContent.pathSection += `/${config.versionToPublish}`;
 		}
-
-		// TODO: clean version folder before generating new files
 
 		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
 			content: rootContent,
@@ -70,7 +62,6 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 	return navigationLinksByLocale;
 }
 
-
 interface CreateNavigationLinksParams {
 	content: ContentNode;
 	contentCache: ContentCache;
@@ -82,13 +73,41 @@ interface CreateNavigationLinksParams {
 function createNavigationLinks({ content, contentCache, locale, version, basePath = "" } : CreateNavigationLinksParams): NavigationLink {
 	const thisPath = `${basePath}/${content.pathSection}`;
 	const filePath = content.isIndex ? `${thisPath}/index.html` : `${thisPath}.html`;
-	const localLinks: NavigationLink[] = content.anchors.map((anchor) => {
+
+	const mapAnchor = (anchor: ContentAnchor): NavigationLink => {
 		return {
 			title: anchor.name,
 			path: `${filePath}#${anchor.id}`,
 			level: anchor.level,
-		};
-	});
+			children: [],
+		}
+	};
+
+	const localLinks: NavigationLink[] = [];
+
+	const anchorStack: Array<Array<NavigationLink>> = [localLinks];
+	let currentLevel = 2;
+
+	for (let anchor of content.anchors) {
+		const currentList = anchorStack[anchorStack.length - 1];
+		const anchorAsLink = mapAnchor(anchor);
+
+		if (anchor.level === currentLevel) {
+			currentList.push(anchorAsLink);
+			continue;
+		}
+
+		if (anchor.level > currentLevel) {
+			const lastAnchorToNest = currentList[currentList.length - 1].children!; 
+			anchorStack.push(lastAnchorToNest);
+			lastAnchorToNest.push(anchorAsLink);
+		} else {
+			anchorStack.pop();
+			const lastListToNext = anchorStack[anchorStack.length - 1];
+			lastListToNext.push(anchorAsLink);
+		}
+		currentLevel = anchor.level;
+	};
 
 	if (content.htmlContent) {
 		contentCache[filePath] = { content: content.htmlContent, locale, version };
@@ -109,17 +128,31 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
 		console.log("Generating page ", filePath);
+
 		// TODO: maybe provide a way for page to set a different template based on metadata
 		const template = await templates.getTemplate("page");
 		const pageContent = template({
 			mainContent: content.content,
 			navigationMenu: navigationLinksByLocale[content.locale],
 			locale: content.locale,
-			version: content.version
+			version: content.version,
+			currentFilePath: filePath,
 		});
 		await createFile(path.join(config.output_folder, filePath), pageContent);
 	}
 }
+
+// TODO: PENDING TASKS
+// - links: translate links between source md files to actual path
+// - images: fix image links from source. Copy images over to locale/assets
+// - version:
+//   - link to change version
+// - not found page
+// - search
+// - darkmode / light mode
+
+
+
 
 // TODO:
 // create navigation tree and link mappings

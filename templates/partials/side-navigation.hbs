@@ -1,9 +1,15 @@
 <nav class="side-nav">
-  Logo
+  <a class="nav-logo" href="{{navigationMenu.path}}">
+    <img src="/assets/images/icon.png" alt="Godot Aseprite Wizard Logo"/>
+  </a>
 
-  <ul class="nav-menu">
-  {{#with navigationMenu }} 
-    {{> side-navigation-section }}
-  {{/with}}
+  <ul class="nav-menu" id="mainNav">
+    <li class="nav-item nav-level-{{navigationMenu.level}} {{getNavClassWhenCurrent navigationMenu.path @root.currentFilePath}}">
+       <a href="{{navigationMenu.path}}">{{navigationMenu.title}}</a>
+    </li>
+
+    {{#each navigationMenu.children}}
+       {{> side-navigation-section }}
+    {{/each}}
   </ul>
 </nav>
