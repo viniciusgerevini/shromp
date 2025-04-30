@@ -2,14 +2,13 @@
 
 // TODO fix images
 
-<p align="center"><img src="icon.png" alt="Aseprite Wizard Logo"/></p>
+![Aseprite Wizard Logo](../assets/images/icon.png?center)
 
 Godot plugin to help import Aseprite animations to AnimationPlayers, AnimatedSprites 2D/3D and SpriteFrames.
 
 These are the docs for the latest version for Godot 4. For Godot 3, check the README on [godot_3](https://github.com/viniciusgerevini/godot-aseprite-wizard/tree/godot_3) branch.
 
-<img align="center" src="./screenshots/comparison.png" />
-
+![comparison](../assets/images/comparison.png?center)
 
 // TODO add links (repo) (discussions) (issues)
 

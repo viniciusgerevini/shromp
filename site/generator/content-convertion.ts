@@ -81,7 +81,21 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 				}
 
 				return `<a href="${transformLinkToTarget(link.href)}">${link.text}</a>`;
-			}
+			},
+			image(img): string | false {
+				if (!img.href.startsWith(".")) {
+					return false;
+				}
+				let targetPath = img.href.replaceAll(/\.\.\/+/g, "/");
+				let shouldCentralize = false;
+
+				if (targetPath.includes("?center")) {
+					targetPath = targetPath.replace("?center", "");
+					shouldCentralize = true;
+				}
+
+				return `<img src="${targetPath}" alt="${img.text}" ${shouldCentralize ? 'class="img-center"' : ''} />`
+			},
 		}
 	});
 

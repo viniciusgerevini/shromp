@@ -1,10 +1,8 @@
 import { generateHtmlForTree } from './content-convertion.ts';
 import { getFileTree } from './files.ts';
-import { createSiteFromContent } from './build-files.ts';
+import { copyImages, createSiteFromContent } from './build-files.ts';
 
 import config from "./config.ts";
-
-console.log("let's do it");
 
 try {
 	console.log("===== Reading source files =====");
@@ -13,6 +11,8 @@ try {
 	const contentTree = await generateHtmlForTree(tree);
 	console.log("===== Creating pages =====");
 	await createSiteFromContent(contentTree);
+	console.log("===== Copying images folder. =====");
+	await copyImages();
 	console.log("===== Process complete. =====");
 	console.log(`Check ${config.output_folder}`);
 } catch (err) {

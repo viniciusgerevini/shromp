@@ -1,5 +1,13 @@
 import { Dirent } from 'node:fs';
-import { readdir, open, FileHandle, mkdir, writeFile } from 'node:fs/promises';
+import {
+	FileHandle,
+	cp,
+	mkdir,
+	open,
+	readdir,
+	writeFile,
+} from 'node:fs/promises';
+
 import * as path from "node:path";
 
 export interface DirNode {
@@ -89,4 +97,8 @@ export async function createFile(filePath: string, content: string): Promise<voi
 
 export async function listFilesInDir(dirPath: string): Promise<string[]> {
 	return readdir(dirPath);
+}
+
+export async function copyTo(fromPath: string, toPath: string): Promise<void> {
+	await cp(fromPath, toPath, { recursive: true });
 }

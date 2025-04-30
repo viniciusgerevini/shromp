@@ -2,7 +2,7 @@ import * as path from "node:path";
 
 import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
-import { createFile } from "./files.ts";
+import { copyTo, createFile } from "./files.ts";
 import Templates from "./templates.ts";
 
 // TODO maybe use dotenv for config
@@ -142,9 +142,11 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 	}
 }
 
+export async function copyImages(): Promise<void> {
+	await copyTo(path.join(config.source_folder, "assets", "images"), path.join(config.output_folder, "assets", "images"));
+}
+
 // TODO: PENDING TASKS
-// - links: translate links between source md files to actual path
-// - images: fix image links from source. Copy images over to locale/assets
 // - add marked plugin for better tab support (merge and stuff)
 // - load page title 
 // - site title config
