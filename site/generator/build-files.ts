@@ -145,11 +145,19 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 // TODO: PENDING TASKS
 // - links: translate links between source md files to actual path
 // - images: fix image links from source. Copy images over to locale/assets
+// - add marked plugin for better tab support (merge and stuff)
+// - load page title 
+// - site title config
+// - page option: custom title
+// - option to not load headings in navbar (Getting started page)
 // - version:
 //   - link to change version
 // - not found page
-// - search
 // - darkmode / light mode
+// - favicon
+// - links: github
+// - meta: options
+// - search
 
 
 

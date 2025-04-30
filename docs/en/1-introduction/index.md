@@ -54,4 +54,4 @@ For project specific configurations check `Project -> Project Settings -> Genera
 
 ## Usage
 
-Check the (Importing docs)[./importing] for usage details.
+Check the [importing docs](../2-importing/index.md) for usage details.

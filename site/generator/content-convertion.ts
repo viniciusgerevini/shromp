@@ -71,26 +71,24 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 
 	let title: string | undefined = undefined;
 
-	// TODO remove after part of version control
-	// // vanila way to get headings
-	// const renderer = {
-	// 	heading({tokens, depth}: any): string | false {
-	// 		if (depth === 1 && !title) {
-	// 			title = getFirstTextTokenValue(tokens);
-	// 		} else if (depth === 2) {
-	// 			anchors.push(createContentAnchorFromText(getFirstTextTokenValue(tokens)!));
-	// 		}
-	// 		return false;
-	// 	},
-	// };
-
 	const mkd = new Marked();
 	mkd.use(gfmHeadingId({ prefix: "aid-" }));
-	// mkd.use({ renderer });
+	mkd.use({
+		renderer: {
+			link(link): string | false {
+				if (!link.href.startsWith(".")) {
+					return false;
+				}
+
+				return `<a href="${transformLinkToTarget(link.href)}">${link.text}</a>`;
+			}
+		}
+	});
 
 	const htmlContent: string = mkd.parse(content) as string;
 
 	const anchors: ContentAnchor[] = [];
+
 	for (let heading of getHeadingList()) {
 		if (heading.level === 1 && !title) {
 			title = heading.text;
@@ -108,17 +106,8 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	}
 }
 
-// function getFirstTextTokenValue(tokens: { type: string, text: string }[]): string | undefined {
-// 	for (let token of tokens) {
-// 		if (token.type === "text") {
-// 			return token.text;
-// 		}
-// 	}
-// }
-//
-// function createContentAnchorFromText(text: string): ContentAnchor {
-// 	return {
-// 		id: text.toLowerCase().replaceAll(/\s+/g, "-"), // TODO better sanitization
-// 		name: text,
-// 	}
-// }
+// FIXME: this is a bit coupled with the step to read files on files.ts
+// Keeping it here for now, but it probably needs more thought
+function transformLinkToTarget(link: string): string {
+	return link.replaceAll(/\/[0-9]+\-/g, '/').replace(".md", ".html");
+}
