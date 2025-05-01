@@ -94,6 +94,9 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 				if (metadata.headingNavMaxLevel || metadata.headingNavMaxLevel === 0) {
 					headingAnchorsMaxLevel = metadata.headingNavMaxLevel;
 				}
+				if (metadata.contentToRemove) {
+					return markdown.replace(metadata.contentToRemove, "");
+				}
 			}
 
 			return markdown;
@@ -161,6 +164,7 @@ interface ContentMetadata {
 	template?: string;
 	title?: string;
 	headingNavMaxLevel?: number;
+	contentToRemove?: string;
 }
 
 function extractMetadata(content: string): ContentMetadata {
@@ -189,5 +193,6 @@ function extractMetadata(content: string): ContentMetadata {
 			metadata.headingNavMaxLevel = parseInt(value.trim());
 		}
 	}
+	metadata.contentToRemove = m[0];
 	return metadata;
 }

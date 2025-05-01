@@ -42,6 +42,7 @@ describe('content', () => {
 					anchors: [],
 					nestedContent: [],
 					isIndex: false,
+					template: undefined,
 				}],
 				isIndex: false,
 			};
@@ -87,6 +88,7 @@ describe('content', () => {
 					],
 					nestedContent: [],
 					isIndex: false,
+					template: undefined,
 				}]
 			};
 
@@ -120,49 +122,139 @@ describe('content', () => {
 				],
 				nestedContent: [],
 				isIndex: true,
+				template: undefined,
 			};
 
 			const contentTree = await generateHtmlForTree(fileTree);
 
 			assert.deepEqual(contentTree, expectedContentTree);
 		});
-	});
 
-	it('uses node name as title when content has no heading', async () => {
-		const fileTree: DirNode = {
-			name: 'docs',
-			path: './docs',
-			hasIndex: false,
-			children: [
-				{
-					name: 'somefile',
-					path: 'docs/somefile.md',
-				},
-			]
-		};
+		it('uses node name as title when content has no heading', async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: false,
+				children: [
+					{
+						name: 'somefile',
+						path: 'docs/somefile.md',
+					},
+				]
+			};
 
-		mockFs({
-			'./docs': { 'somefile.md': 'Some file with no heading' },
+			mockFs({
+				'./docs': { 'somefile.md': 'Some file with no heading' },
+			});
+
+			const expectedContentTree = {
+				title: 'docs',
+				pathSection: 'docs',
+				htmlContent: null,
+				anchors: [],
+				nestedContent: [{
+					title: 'somefile',
+					pathSection: 'somefile',
+					htmlContent: '<p>Some file with no heading</p>\n',
+					anchors: [],
+					nestedContent: [],
+					isIndex: false,
+					template: undefined,
+				}],
+				isIndex: false,
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
 		});
 
-		const expectedContentTree = {
-			title: 'docs',
-			pathSection: 'docs',
-			htmlContent: null,
-			anchors: [],
-			nestedContent: [{
-				title: 'somefile',
-				pathSection: 'somefile',
-				htmlContent: '<p>Some file with no heading</p>\n',
+		it('uses custom title from metadata', async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '<!--\ntitle: Banana\n-->\n# Doc index File\n with content' },
+			});
+
+			const expectedContentTree = {
+				title: 'Banana',
+				pathSection: 'docs',
+				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+					'<p> with content</p>\n',
 				anchors: [],
 				nestedContent: [],
-				isIndex: false,
-			}],
-			isIndex: false,
-		};
+				isIndex: true,
+				template: undefined,
+			};
 
-		const contentTree = await generateHtmlForTree(fileTree);
+			const contentTree = await generateHtmlForTree(fileTree);
 
-		assert.deepEqual(contentTree, expectedContentTree);
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it('does not include anchors for headers above max navigation defined in metadata', async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '<!--\nheadings-nav-max-level: 2\n-->\n# Index File\n with content\n## include \n### do not include' },
+			});
+
+			const expectedContentTree = {
+				title: 'Index File',
+				pathSection: 'docs',
+				htmlContent: '<h1 id="aid-index-file">Index File</h1>\n'+
+					'<p> with content</p>\n' +
+					'<h2 id="aid-include">include</h2>\n'+
+					'<h3 id="aid-do-not-include">do not include</h3>\n',
+				anchors: [
+					{ id: 'aid-include', name: 'include', level: 2 },
+				],
+				nestedContent: [],
+				isIndex: true,
+				template: undefined,
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it('sets template prop via metadata', async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '<!--\ntemplate: test-template\n-->\n# Doc index File\n with content' },
+			});
+
+			const expectedContentTree = {
+				title: 'Doc index File',
+				pathSection: 'docs',
+				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+					'<p> with content</p>\n',
+				anchors: [],
+				nestedContent: [],
+				isIndex: true,
+				template: "test-template",
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
 	});
 });
