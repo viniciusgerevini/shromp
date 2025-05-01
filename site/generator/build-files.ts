@@ -9,6 +9,7 @@ interface ContentData {
 	locale: string;
 	version?: string;
 	template: string | undefined;
+	childLinks: NavigationLink[];
 }
 
 type ContentCache = { [key:string]: ContentData };
@@ -104,6 +105,10 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 		currentLevel = anchor.level;
 	};
 
+	const children = content.nestedContent.map(
+		(c) => createNavigationLinks({ content: c, contentCache, locale, version, basePath: thisPath })
+	);
+
 	if (content.htmlContent) {
 		contentCache[filePath] = {
 			title: content.title,
@@ -111,6 +116,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 			locale,
 			version,
 			template: content.template,
+			childLinks: children,
 		};
 	}
 
@@ -118,9 +124,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 		title: content.title,
 		path: filePath,
 		level: 1,
-		children: localLinks.concat(content.nestedContent.map(
-			(c) => createNavigationLinks({ content: c, contentCache, locale, version, basePath: thisPath })
-		)),
+		children: localLinks.concat(children),
 	};
 }
 
@@ -138,6 +142,7 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 			locale: content.locale,
 			version: content.version,
 			currentFilePath: filePath,
+			childLinks: content.childLinks,
 		});
 		await createFile(config.outputFolder(filePath), pageContent);
 	}

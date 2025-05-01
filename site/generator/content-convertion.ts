@@ -81,7 +81,6 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 
 	mkd.use({ hooks: {
 		preprocess(markdown: string): string | Promise<string> {
-
 			if (markdown.startsWith("<!--")) {
 				const metadata = extractMetadata(markdown);
 
@@ -168,7 +167,7 @@ interface ContentMetadata {
 }
 
 function extractMetadata(content: string): ContentMetadata {
-	const m = /^<!--.*-->/s.exec(content);
+	const m = /^<!--[^<]+-->\n/s.exec(content);
 	if (!m) {
 		return {};
 	}

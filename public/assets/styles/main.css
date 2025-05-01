@@ -78,6 +78,12 @@ h4 { font-size: 1em; }
   margin-bottom: 10px;
 }
 
+.content hr {
+  color: var(--table-border-color);
+  border: 1px solid var(--table-border-color);
+  margin: 20px 0px;
+}
+
 .content code {
   font-family: monospace;
   font-size: 0.9em;
