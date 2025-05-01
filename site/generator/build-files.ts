@@ -8,6 +8,7 @@ import Templates from "./templates.ts";
 // TODO maybe use dotenv for config
 
 interface ContentData {
+	title: string;
 	content: string;
 	locale: string;
 	version?: string;
@@ -110,7 +111,12 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 	};
 
 	if (content.htmlContent) {
-		contentCache[filePath] = { content: content.htmlContent, locale, version };
+		contentCache[filePath] = {
+			title: content.title,
+			content: content.htmlContent,
+			locale,
+			version
+		};
 	}
 
 	return {
@@ -132,6 +138,7 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 		// TODO: maybe provide a way for page to set a different template based on metadata
 		const template = await templates.getTemplate("page");
 		const pageContent = template({
+			pageTitle: content.title,
 			mainContent: content.content,
 			navigationMenu: navigationLinksByLocale[content.locale],
 			locale: content.locale,
