@@ -153,11 +153,9 @@ export async function copyImages(): Promise<void> {
 }
 
 // TODO: PENDING TASKS
-// TODO responsive menu
-// - child list
+// TODO
 // - version:
 //   - link to change version
 // - not found page and custom pages
 // - darkmode / light mode: https://dev.to/whitep4nth3r/the-best-lightdark-mode-theme-toggle-in-javascript-368f
-// - search
-// - README for generator
+//

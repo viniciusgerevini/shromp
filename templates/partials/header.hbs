@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{locale}}" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,10 +14,24 @@
     <link rel="stylesheet" href="/assets/styles/reset.css" type="text/css"/>
     <link rel="stylesheet" href="/assets/styles/main.css" type="text/css"/>
     <link rel="stylesheet" href="/assets/styles/font.css" type="text/css"/>
-    {{!-- {{#each globalAssets.styles}} --}}
-    {{!--   <link rel="stylesheet" href="/styles/{{ this }}" type="text/css"/> --}}
-    {{!-- {{/each}} --}}
   </head>
-  <body>
-    <header></header>
-    <div class="page-bd">
+<body>
+<header class="page-header">
+  <div class="site-config">
+    <div class="selector site-theme-selector">
+      <select name="theme" id="siteThemeSelector">
+        <option value="auto">Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    {{!-- // TODO: get version list --}}
+    <div class="selector doc-version-selector">
+      <select name="version">
+        <option value="auto">v9.1.0 (Godot 4)</option>
+      </select>
+    </div>
+  </div>
+</header>
+<div class="page-bd">

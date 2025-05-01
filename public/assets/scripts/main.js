@@ -43,5 +43,25 @@
 
 	configureNav();
 
+	const themeSelector = document.getElementById("siteThemeSelector");
+	themeSelector.onchange = (event) => {
+		setTheme(event.target.value);
+		localStorage.setItem("theme", event.target.value);
+	};
+
+	function setTheme(theme, shouldUpdateSelector) {
+		let newTheme = theme;
+		if (!newTheme || newTheme === "auto") {
+			newTheme = window.matchMedia("(prefers-color-scheme: dark)") ? "dark" : "light";
+		}
+
+		document.querySelector("html").setAttribute("data-theme", newTheme);
+
+		if (shouldUpdateSelector) {
+			themeSelector.value = theme;
+		}
+	}
+
+	setTheme(localStorage.getItem("theme"), true);
 }());
 
