@@ -1,5 +1,3 @@
-import * as path from "node:path";
-
 import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
 import { copyTo, createFile } from "./files.ts";
@@ -150,11 +148,11 @@ export async function copyImages(): Promise<void> {
 }
 
 // TODO: PENDING TASKS
+// TODO responsive menu
+// - child list
 // - version:
 //   - link to change version
-// - not found page
-// - darkmode / light mode
-// - favicon
-// - links: gtlthub
+// - not found page and custom pages
+// - darkmode / light mode: https://dev.to/whitep4nth3r/the-best-lightdark-mode-theme-toggle-in-javascript-368f
 // - search
 // - README for generator

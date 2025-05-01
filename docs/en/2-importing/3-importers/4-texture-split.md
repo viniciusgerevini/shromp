@@ -1,6 +1,8 @@
+<!--
+headings-nav-max-level: 1
+-->
 # Texture (split by layer)
 
-<!-- section: Description: -->
 You can generate one image resource for each layer in Aseprite by using the `Texture (Split by Layer)` importer. This importer will generate one `.ase_layer_tex` file for each layer, which will be recognised as `PortableCompressedTexture2D` and can be used directly. 
 
 

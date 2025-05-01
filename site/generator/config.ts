@@ -11,6 +11,7 @@ export default {
   defaultLocale(): string {
     return process.env.VGEN_DEFAULT_LOCALE || "en";
   },
+
   /**
    * Overwrite base URL. Useful when hosting files in any location other than the
    * root

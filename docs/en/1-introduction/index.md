@@ -23,7 +23,7 @@
 
 Follow Godot [ installing plugins guide ]( https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html).
 
-Alternatively, you can download a specific version from [the releases page](https://github.com/viniciusgerevini/godot-aseprite-wizard/releases) and manually extract them to the addons folder.
+Alternatively, you can download a specific version from [the releases page](https://github.com/viniciusgerevini/godot-aseprite-wizard/releases) and manually extract it to the addons folder.
 
 ## Configuration
 

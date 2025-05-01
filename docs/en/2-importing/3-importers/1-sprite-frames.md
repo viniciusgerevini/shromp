@@ -1,6 +1,7 @@
+<!--
+headings-nav-max-level: 1
+-->
 # SpriteFrames importer
-
-<!-- section: Description: -->
 
 Aseprite files are imported as `SpriteFrames` resources and can be loaded to `AnimatedSprite` nodes directly or programatically.
 

@@ -5,18 +5,19 @@ headings-nav-max-level: 1
 
 ![Aseprite Wizard Logo](../assets/images/icon.png?center)
 
-Godot plugin to help import Aseprite animations to AnimationPlayers, AnimatedSprites 2D/3D and SpriteFrames.
+Aseprite Wizard is a plugin for Godot to help you import Aseprite animations to AnimationPlayers, AnimatedSprites 2D/3D and SpriteFrames.
 
-These are the docs for the latest version for Godot 4. For Godot 3, check the README on [godot_3](https://github.com/viniciusgerevini/godot-aseprite-wizard/tree/godot_3) branch.
+These are the docs for Godot 4. For Godot 3, check the README on [godot_3](https://github.com/viniciusgerevini/godot-aseprite-wizard/tree/godot_3) branch.
 
 ![comparison](../assets/images/comparison.png?center)
 
-// TODO add links (repo) (discussions) (issues)
-
 
 ## Contact
-Thanks for the constant feedback and suggestions. If you are facing problems with the plugin or have suggestions/questions, please open an issue in this repo.
 
-If you like game dev related content and want to support me, consider subscribing to my [Youtube channel](http://youtube.com/c/ThisIsVini).
+🐛 For suggestions, reporting issues and bugs, please open an [issue on Github](https://github.com/viniciusgerevini/godot-aseprite-wizard/issues). 
 
-Check my [website](https://thisisvini.com) for more contact options.
+👋 If you have questions or need a helping hand, feel free to [start a discussion here](https://github.com/viniciusgerevini/godot-aseprite-wizard/discussions).
+
+♥️  This plugin wouldn't be what it is without the help from the community. Thanks for all the feedback and contributions.
+
+📢 Wan't to chat? You can find me in a few places. Check my [website](https://thisisvini.com) for more contact options.

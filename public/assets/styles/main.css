@@ -252,15 +252,15 @@ h4 { font-size: 1em; }
 }
 
 .nav-item > ul > .nav-item > a {
-  padding-left: 34px;
+  padding-left: 44px;
 }
 
 .nav-item > ul > .nav-item > ul > .nav-item > a {
-  padding-left: 54px;
+  padding-left: 64px;
 }
 
 .nav-item > ul > .nav-item > ul > .nav-item > ul > .nav-item > a {
-  padding-left: 74px;
+  padding-left: 84px;
 }
 
 .img-center {

@@ -1,6 +1,8 @@
+<!--
+headings-nav-max-level: 1
+-->
 # Tileset Texture
 
-<!-- section: Description: -->
 Aseprite 1.3 added [Tilemap support](https://www.aseprite.org/docs/tilemap/). You can create special layers which can then be exported as tilesets. The tileset importer will generate an image with the tiles from the aseprite file, which can be added to the Tileset editor in Godot.
 
 ## Options

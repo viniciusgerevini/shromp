@@ -1,6 +1,7 @@
+<!--
+headings-nav-max-level: 1
+-->
 # Texture
-
-<!-- section: Description: -->
 
 Import Aseprite file as `PortableCompressedTexture2D`. This image can be either the full spritesheet or just the first frame (useful for static art like backgrounds).
 

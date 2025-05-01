@@ -1,3 +1,0 @@
-# Guides and tips
-
-Soon :)

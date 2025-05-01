@@ -1,6 +1,7 @@
+<!--
+headings-nav-max-level: 1
+-->
 # SpriteFrames (Split by layer)
-
-<!-- section: Description: -->
 
 You can generate one `SpriteFrames` resource for each layer by using the `SpriteFrames (Split by Layer)` importer. This importer will generate one `.ase_layer` file for each layer, which will be recognised as `SpriteFrames` and can be used directly. 
 
