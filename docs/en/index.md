@@ -1,6 +1,7 @@
+<!--
+headings-nav-max-level: 1
+-->
 # Godot Aseprite Wizard
-
-// TODO fix images
 
 ![Aseprite Wizard Logo](../assets/images/icon.png?center)
 

@@ -12,6 +12,7 @@ interface ContentData {
 	content: string;
 	locale: string;
 	version?: string;
+	template: string | undefined;
 }
 
 type ContentCache = { [key:string]: ContentData };
@@ -115,7 +116,8 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 			title: content.title,
 			content: content.htmlContent,
 			locale,
-			version
+			version,
+			template: content.template,
 		};
 	}
 
@@ -135,8 +137,7 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 	for (const [filePath, content] of Object.entries(contentCache)) {
 		console.log("Generating page ", filePath);
 
-		// TODO: maybe provide a way for page to set a different template based on metadata
-		const template = await templates.getTemplate("page");
+		const template = await templates.getTemplate(content.template || config.defaultPageTemplate);
 		const pageContent = template({
 			pageTitle: content.title,
 			mainContent: content.content,
@@ -154,10 +155,6 @@ export async function copyImages(): Promise<void> {
 }
 
 // TODO: PENDING TASKS
-// - load page title 
-// - site title config
-// - page option: custom title
-// - option to not load headings in navbar (Getting started page)
 // - version:
 //   - link to change version
 // - not found page
@@ -166,16 +163,3 @@ export async function copyImages(): Promise<void> {
 // - links: github
 // - meta: options
 // - search
-
-
-
-
-// TODO:
-// create navigation tree and link mappings
-// replace markdown links to final ones
-//    - OK this is nasty, because at this point we don't have access to the source
-//    anymore. Probably this should be done in the content conversion step.
-//    here is my current idea
-//     - markdown files are linked to the actual markdown file
-//     - on convertion, generate an reference id for each file (this is important to unify relative paths)
-//     - on this step, map reference ids to original path, and replace them when inserting content

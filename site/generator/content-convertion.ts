@@ -12,6 +12,7 @@ export interface ContentNode {
 	anchors: ContentAnchor[];
 	nestedContent: ContentNode[];
 	isIndex: boolean;
+	template?: string;
 }
 
 export interface ContentAnchor {
@@ -43,6 +44,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			dirContentNode.htmlContent = indexNode.htmlContent;
 			dirContentNode.anchors = indexNode.anchors;
 			dirContentNode.isIndex = true;
+			dirContentNode.template = indexNode.template;
 		}
 
 		dirContentNode.nestedContent = await Promise.all(sourceNode.children.map(contentForNode));
@@ -65,14 +67,39 @@ interface ContentForFileResult {
 	title: string | undefined;
 	htmlContent: string;
 	anchors: ContentAnchor[];
+	template: string | undefined;
 }
 
 async function generateContentForFile(filePath: string): Promise<ContentForFileResult> {
 	const content = await readFileContent(filePath);
 
+	let headingAnchorsMaxLevel = 3;
 	let title: string | undefined = undefined;
+	let template: string | undefined = undefined;
 
 	const mkd = new Marked();
+
+	mkd.use({ hooks: {
+		preprocess(markdown: string): string | Promise<string> {
+
+			if (markdown.startsWith("<!--")) {
+				const metadata = extractMetadata(markdown);
+
+				if (metadata.title) {
+					title = metadata.title;
+				}
+				if (metadata.template) {
+					template = metadata.template;
+				}
+				if (metadata.headingNavMaxLevel || metadata.headingNavMaxLevel === 0) {
+					headingAnchorsMaxLevel = metadata.headingNavMaxLevel;
+				}
+			}
+
+			return markdown;
+		}
+
+	}});
 
 	mkd.use(gfmHeadingId({ prefix: "aid-" }));
 	mkd.use(extendedTables());
@@ -107,11 +134,11 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	const anchors: ContentAnchor[] = [];
 
 	for (let heading of getHeadingList()) {
-		if (heading.level === 1 && !title) {
-			title = heading.text;
-			// TODO configure heading depth allowing nesting for anchors
-			// config global and per file
-		} else if (heading.level <= 3) {
+		if (heading.level === 1) {
+			if (!title) {
+				title = heading.text;
+			}
+		} else if (heading.level <= headingAnchorsMaxLevel) {
 			anchors.push({ id: heading.id, name: heading.text, level: heading.level });
 		}
 	}
@@ -120,6 +147,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 		title,
 		htmlContent,
 		anchors,
+		template,
 	}
 }
 
@@ -127,4 +155,39 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 // Keeping it here for now, but it probably needs more thought
 function transformLinkToTarget(link: string): string {
 	return link.replaceAll(/\/[0-9]+\-/g, '/').replace(".md", ".html");
+}
+
+interface ContentMetadata {
+	template?: string;
+	title?: string;
+	headingNavMaxLevel?: number;
+}
+
+function extractMetadata(content: string): ContentMetadata {
+	const m = /^<!--.*-->/s.exec(content);
+	if (!m) {
+		return {};
+	}
+	const metadata: ContentMetadata = {};
+	const lines = m[0].split("\n");
+	const relevantLines = lines.slice(1, lines.length - 1);
+
+	for (let line of relevantLines) {
+		const [key, value] = line.split(":");
+
+		if (key.trim() === "template") {
+			metadata.template = value.trim();
+			continue;
+		}
+
+		if (key.trim() === "title") {
+			metadata.title = value.trim();
+			continue;
+		}
+
+		if (key.trim() === "headings-nav-max-level") {
+			metadata.headingNavMaxLevel = parseInt(value.trim());
+		}
+	}
+	return metadata;
 }

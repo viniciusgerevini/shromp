@@ -34,5 +34,5 @@ export default {
   // TODO
   // latestVersion
   templatesFolder: "../templates",
-  defaultPageTemplate: "page.hbs",
+  defaultPageTemplate: "page",
 }

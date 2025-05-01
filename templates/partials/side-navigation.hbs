@@ -5,7 +5,7 @@
 
   <ul class="nav-menu" id="mainNav">
     <li class="nav-item nav-level-{{navigationMenu.level}} {{getNavClassWhenCurrent navigationMenu.path @root.currentFilePath}}">
-       <a href="{{navigationMenu.path}}">{{navigationMenu.title}}</a>
+       <a href="{{navigationMenu.path}}" style="text-align: center; font-weight: 600">{{navigationMenu.title}}</a>
     </li>
 
     {{#each navigationMenu.children}}
