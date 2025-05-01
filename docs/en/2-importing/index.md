@@ -9,7 +9,7 @@ _You can check [this video](https://youtu.be/1W-CCbrzG_0) for usage examples. It
 
 There are three different methods you can use to import animations to Godot:
 
-1. Using the automatic importers: Any file saved in the project will be automatically converted to the chosen resource. By default, the importer does not import anything. You can change the behaviour per file or choose the default importer via Project Settings.
+1. Using the automatic importers: Any file saved in the project will be automatically converted to the chosen resource.
 1. Using the Inspector Dock: There will be a section called Aseprite in the inspector dock when selecting Sprite, TextureRect and AnimatedSprite nodes.
 1. Using the wizard dock: You can open the wizard dock via `Project -> Tools -> Aseprite Wizard -> Spritesheet Wizard Dock...` menu. In this dock you can generate standalone SpriteFrames files from anywhere in your system.
 

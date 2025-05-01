@@ -48,7 +48,7 @@ function registerHelpers() {
 		}
 
 		if (currentFileWithoutIndex.includes(navLinkWithoutIndex)) {
-			return "expanded loaded-expanded";
+			return "loaded-expanded";
 		}
 		return "collapsed";
 	});

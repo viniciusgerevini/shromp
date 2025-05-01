@@ -6,6 +6,7 @@
   --table-border-color: #e1e4e5;
   --table-odd-bg: #f6f8fa;
   --table-head-color: #edf2f7;
+  --nav-expanded-bg-color: #f9f9f9;
   --default-font: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
@@ -41,6 +42,12 @@ h4 { font-size: 1em; }
   margin-top: 48px;
   margin-left: 340px;
 } 
+
+@media (max-width: 470px) {
+  .content {
+    margin-left: 0px;
+  }
+}
 
 .content img {
   max-width: 100%;
@@ -206,6 +213,7 @@ h4 { font-size: 1em; }
   border: none;
   width: 26px;
   margin-left: -27px;
+  margin-right: 5px;
 }
 
 .nav-menu a button::before {
@@ -217,7 +225,8 @@ h4 { font-size: 1em; }
   color: var(--text-color);
 }
 
-.nav-menu .nav-item.expanded > a button::before {
+.nav-menu .nav-item.expanded > a button::before,
+.nav-menu .nav-item.loaded-expanded > a button::before {
   content: '\f147';
 }
 
@@ -229,17 +238,9 @@ h4 { font-size: 1em; }
   display: none;
 }
 
-/*.nav-menu .nav-item.expanded {*/
-/*  background-color: #f9f9f9;*/
-/*}*/
-
 .nav-menu .nav-item.loaded-expanded {
-  background-color: #f9f9f9;
+  background-color: var(--nav-expanded-bg-color);
 }
-
-/*.nav-menu .nav-item.expanded > a {*/
-/*  font-weight: 700;*/
-/*}*/
 
 .nav-menu .nav-item.loaded-expanded > a {
   font-weight: 700;
@@ -249,7 +250,8 @@ h4 { font-size: 1em; }
   font-weight: 700;
 }
 
-.nav-menu .nav-item.expanded > ul {
+.nav-menu .nav-item.expanded > ul,
+.nav-menu .nav-item.loaded-expanded > ul {
   display: inherit;
 }
 
@@ -273,3 +275,36 @@ h4 { font-size: 1em; }
   display: block;
   margin: 0 auto;
 }
+
+@media (max-width: 470px) {
+  .nav-logo {
+    margin: 10px 5px auto;
+  }
+  .nav-logo img {
+    max-height: 50px;
+  }
+  .page-bd {
+    display: block;
+  }
+
+  .side-nav {
+    position: inherit;
+  }
+
+  .nav-menu {
+    width: 100%;
+  }
+
+  /*.nav-menu > .nav-item.loaded-expanded > ul {*/
+  /*  display: none;*/
+  /*}*/
+  /**/
+  /*.nav-menu > .nav-item.loaded-expanded > a button::before {*/
+  /*  content: '\f196';*/
+  /*}*/
+  /**/
+  /*.nav-menu > .nav-item.expanded > ul {*/
+  /*  display: inherit;*/
+  /*}*/
+}
+
