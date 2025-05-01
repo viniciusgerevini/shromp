@@ -6,11 +6,12 @@
   "main": "index.js",
   "scripts": {
     "test": "node --import tsx --test --enable-source-maps --test-reporter node-test-reporter",
-    "build": "node --import tsx generator/index.ts"
+    "build": "node --import tsx -r dotenv/config generator/index.ts"
   },
   "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "handlebars": "^4.7.8",
     "marked": "^15.0.11",
     "marked-extended-tables": "^2.0.1",

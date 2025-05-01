@@ -6,7 +6,7 @@ import config from "./config.ts";
 
 try {
 	console.log("===== Reading source files =====");
-	const tree = await getFileTree(config.source_folder, { excludeEmptyFolders: true });
+	const tree = await getFileTree(config.sourceFolder(), { excludeEmptyFolders: true });
 	console.log("===== Converting Markdown to HTML =====");
 	const contentTree = await generateHtmlForTree(tree);
 	console.log("===== Creating pages =====");
@@ -14,18 +14,7 @@ try {
 	console.log("===== Copying images folder. =====");
 	await copyImages();
 	console.log("===== Process complete. =====");
-	console.log(`Check ${config.output_folder}`);
+	console.log(`Check ${config.outputFolder()}`);
 } catch (err) {
 	console.error(err);
 }
-
-// TODO extra
-// - metadata:
-//    - do not include in tree
-//    - do not include these heading in tree
-//    - heading depth (default 2)
-//    - tags
-// - last modified / commit?
-// - partial update?
-// - search? lunar.js
-// - versioning?

@@ -1,3 +1,5 @@
+import path from "path";
+
 /**
  * Generator options
  */
@@ -6,33 +8,56 @@ export default {
    * default locale to load the site and to fallback when page doesn't exist
    * for selected languge.
    */
-  default_locale: "en",
-  /**
-   * Folder where the source markdown files are located
-   */
-  source_folder: "../docs/",
-  /**
-   * Folder where generated HTML should be saved
-   */
-  // output_folder: "../dist/",
-  output_folder: "../public/",
+  defaultLocale(): string {
+    return process.env.VGEN_DEFAULT_LOCALE || "en";
+  },
   /**
    * Overwrite base URL. Useful when hosting files in any location other than the
    * root
    */
-  base_url: "/",
+  baseUrl(): string {
+    return process.env.VGEN_BASE_URL || "/";
+  },
 
-  // TODO default heading level to include in the navigation. By default H1 and H2s are included. This config allow adding or removing headings
-  // default_navigation_depth
+  /**
+   * Documentation version (files will be nested in this folder)
+   */
+  versionToPublish(): string {
+    return process.env.VGEN_VERSION_TO_PUBLISH || "1.0.0";
+  },
 
-  // TODO
-  // useVersionFolders - if true, third level is version folder
-  // TODO
-  versionToPublish: "1.0.0", // string|undefined; // version which files will be generated against
-  // TODO
-  // stableVersion
-  // TODO
-  // latestVersion
-  templatesFolder: "../templates",
-  defaultPageTemplate: "page",
+  /**
+   * Folder where the source markdown files are located
+   */
+  sourceFolder(...args: string[]): string {
+    return folderPathAssemblyHelper(process.env.VGEN_SOURCE_FOLDER || "../docs/", args);
+  },
+
+  /**
+   * Folder where generated HTML should be saved
+   */
+  outputFolder(...args: string[]): string {
+    return folderPathAssemblyHelper(process.env.VGEN_OUTPUT_FOLDER || "../public/", args);
+  },
+
+  /**
+   * Folder where handlebars templates are stored
+   */
+  templatesFolder(...args: string[]): string {
+    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../templates/", args);
+  },
+
+  /**
+   * Default template to use for pages when not set as metadata
+   */
+  defaultPageTemplate(): string {
+    return process.env.VGEN_DEFAULT_PAGE_TEMPLATE || "page";
+  },
+}
+
+function folderPathAssemblyHelper(folder: string, args: string[]) {
+  if (args.length) {
+    return path.join(folder, ...args);
+  }
+  return folder;
 }

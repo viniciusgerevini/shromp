@@ -5,8 +5,6 @@ import config from "./config.ts";
 import { copyTo, createFile } from "./files.ts";
 import Templates from "./templates.ts";
 
-// TODO maybe use dotenv for config
-
 interface ContentData {
 	title: string;
 	content: string;
@@ -34,7 +32,6 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 	await createPages(contentCache, navigationLinksByLocale);
 }
 
-
 function createNavigationTree(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
 	const navigationLinksByLocale: NavigationLinksForLocale = {};
 
@@ -48,15 +45,13 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			isIndex: localeFolder.isIndex,
 		};
 
-		if (config.versionToPublish) {
-			rootContent.pathSection += `/${config.versionToPublish}`;
-		}
+		rootContent.pathSection += `/${config.versionToPublish()}`;
 
 		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
 			content: rootContent,
 			contentCache,
 			locale: localeFolder.pathSection,
-			version: config.versionToPublish,
+			version: config.versionToPublish(),
 			basePath: "",
 		});
 	}
@@ -137,7 +132,7 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 	for (const [filePath, content] of Object.entries(contentCache)) {
 		console.log("Generating page ", filePath);
 
-		const template = await templates.getTemplate(content.template || config.defaultPageTemplate);
+		const template = await templates.getTemplate(content.template || config.defaultPageTemplate());
 		const pageContent = template({
 			pageTitle: content.title,
 			mainContent: content.content,
@@ -146,12 +141,12 @@ async function createPages(contentCache: ContentCache, navigationLinksByLocale: 
 			version: content.version,
 			currentFilePath: filePath,
 		});
-		await createFile(path.join(config.output_folder, filePath), pageContent);
+		await createFile(config.outputFolder(filePath), pageContent);
 	}
 }
 
 export async function copyImages(): Promise<void> {
-	await copyTo(path.join(config.source_folder, "assets", "images"), path.join(config.output_folder, "assets", "images"));
+	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
 }
 
 // TODO: PENDING TASKS
@@ -160,6 +155,6 @@ export async function copyImages(): Promise<void> {
 // - not found page
 // - darkmode / light mode
 // - favicon
-// - links: github
-// - meta: options
+// - links: gtlthub
 // - search
+// - README for generator

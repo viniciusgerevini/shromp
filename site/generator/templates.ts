@@ -13,7 +13,7 @@ export default async function templates() {
 	return {
 		async getTemplate(templateName: string): Promise<HandlebarsTemplateDelegate> {
 			if (!templates[templateName]) {
-				templates[templateName] = Handlebars.compile(await readFileContent(path.join(config.templatesFolder, `${templateName}.hbs`)));
+				templates[templateName] = Handlebars.compile(await readFileContent(config.templatesFolder(`${templateName}.hbs`)));
 			}
 			return templates[templateName];
 		}
@@ -21,13 +21,13 @@ export default async function templates() {
 }
 
 async function loadPartials() {
-	const files = await listFilesInDir(path.join(config.templatesFolder, "partials"));
+	const files = await listFilesInDir(config.templatesFolder("partials"));
 
 	for (let file of files) {
 		if (path.extname(file) !== ".hbs") {
 			continue;
 		}
-		const fileContent = await readFileContent(path.join(config.templatesFolder, "partials", file));
+		const fileContent = await readFileContent(config.templatesFolder("partials", file));
 		const partialName = path.basename(file, ".hbs");
 		Handlebars.registerPartial(partialName, fileContent);
 	}
