@@ -147,7 +147,6 @@ export async function copyImages(): Promise<void> {
 }
 
 // TODO: PENDING TASKS
-// - add marked plugin for better tab support (merge and stuff)
 // - load page title 
 // - site title config
 // - page option: custom title

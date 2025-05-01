@@ -245,6 +245,11 @@ lodash@^4.17.15:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
+marked-extended-tables@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/marked-extended-tables/-/marked-extended-tables-2.0.1.tgz#b578198c5ba14deafe2600950cafcf86188008e8"
+  integrity sha512-DV4Si978ZdaFbycIxzG4TdaNMtC0J8QfIKj1UOCejgJHwVjVJse8DNdJriWDeo/n74DWVYpRC6S56AdgWDPrPA==
+
 marked-gfm-heading-id@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/marked-gfm-heading-id/-/marked-gfm-heading-id-4.1.1.tgz#c6a46a10272745f63c6b03439dc239543a8324e8"

@@ -1,6 +1,7 @@
 import path from "node:path";
 import { Marked } from 'marked';
 import { gfmHeadingId, getHeadingList } from "marked-gfm-heading-id";
+import extendedTables from "marked-extended-tables";
 
 import { DirNode, FileNode, isDirNode, readFileContent } from "./files.ts";
 
@@ -72,7 +73,9 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	let title: string | undefined = undefined;
 
 	const mkd = new Marked();
+
 	mkd.use(gfmHeadingId({ prefix: "aid-" }));
+	mkd.use(extendedTables());
 	mkd.use({
 		renderer: {
 			link(link): string | false {
