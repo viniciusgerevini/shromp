@@ -47,6 +47,7 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			anchors: localeFolder.anchors,
 			nestedContent: localeFolder.nestedContent,
 			isIndex: localeFolder.isIndex,
+			doNotShowInNavigation: localeFolder.doNotShowInNavigation, 
 		};
 
 		// TODO: allow disabling version
@@ -111,9 +112,15 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 		currentLevel = anchor.level;
 	};
 
-	const children = content.nestedContent.map(
-		(c) => createNavigationLinks({ content: c, contentCache, locale, version, basePath: thisPath })
-	);
+	const children = content.nestedContent.reduce<NavigationLink[]>((links , c) => {
+		const link = createNavigationLinks({ content: c, contentCache, locale, version, basePath: thisPath });
+
+		if (!c.doNotShowInNavigation) {
+			links.push(link);
+		}
+
+		return links;
+	}, []);
 
 	if (content.htmlContent) {
 		contentCache[filePath] = {
@@ -186,8 +193,3 @@ async function getAllVersions(navigationLinksByLocale: NavigationLinksForLocale)
 
 	return Array.from(versions);
 }
-
-
-// TODO: PENDING TASKS
-// TODO
-// - not found page and custom pages

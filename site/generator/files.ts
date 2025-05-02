@@ -1,4 +1,4 @@
-import { createReadStream, Dirent } from 'node:fs';
+import { Dirent } from 'node:fs';
 import crypto from "crypto";
 import {
 	FileHandle,

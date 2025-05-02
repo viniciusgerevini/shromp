@@ -13,6 +13,7 @@ export interface ContentNode {
 	nestedContent: ContentNode[];
 	isIndex: boolean;
 	template?: string;
+	doNotShowInNavigation: boolean;
 }
 
 export interface ContentAnchor {
@@ -37,6 +38,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			anchors: [],
 			nestedContent: [],
 			isIndex: false,
+			doNotShowInNavigation: false,
 		};
 		if (sourceNode.hasIndex) {
 			const indexNode = await generateContentForFile(path.join(sourceNode.path, "index.md"));
@@ -68,6 +70,7 @@ interface ContentForFileResult {
 	htmlContent: string;
 	anchors: ContentAnchor[];
 	template: string | undefined;
+	doNotShowInNavigation: boolean;
 }
 
 async function generateContentForFile(filePath: string): Promise<ContentForFileResult> {
@@ -76,6 +79,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	let headingAnchorsMaxLevel = 3;
 	let title: string | undefined = undefined;
 	let template: string | undefined = undefined;
+	let doNotShowInNavigation: boolean = false;
 
 	const mkd = new Marked();
 
@@ -92,6 +96,9 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 				}
 				if (metadata.headingNavMaxLevel || metadata.headingNavMaxLevel === 0) {
 					headingAnchorsMaxLevel = metadata.headingNavMaxLevel;
+				}
+				if (metadata.doNotShowInNavigation) {
+					doNotShowInNavigation = metadata.doNotShowInNavigation;
 				}
 				if (metadata.contentToRemove) {
 					return markdown.replace(metadata.contentToRemove, "");
@@ -150,6 +157,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 		htmlContent,
 		anchors,
 		template,
+		doNotShowInNavigation,
 	}
 }
 
@@ -164,6 +172,7 @@ interface ContentMetadata {
 	title?: string;
 	headingNavMaxLevel?: number;
 	contentToRemove?: string;
+	doNotShowInNavigation?: boolean;
 }
 
 function extractMetadata(content: string): ContentMetadata {
@@ -190,6 +199,10 @@ function extractMetadata(content: string): ContentMetadata {
 
 		if (key.trim() === "headings-nav-max-level") {
 			metadata.headingNavMaxLevel = parseInt(value.trim());
+		}
+
+		if (key.trim() === "do-not-show-in-nav") {
+			metadata.doNotShowInNavigation = value.trim() === "true";
 		}
 	}
 	metadata.contentToRemove = m[0];
