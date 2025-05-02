@@ -1,6 +1,6 @@
 import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
-import { copyTo, createFile } from "./files.ts";
+import { copyTo, createFile, listFilesInDir } from "./files.ts";
 import Templates from "./templates.ts";
 
 interface ContentData {
@@ -29,9 +29,11 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 	const navigationLinksByLocale = createNavigationTree(content, contentCache);
 
 	await createPages(contentCache, navigationLinksByLocale);
+	await updateVersionsFiles(navigationLinksByLocale);
 }
 
 function createNavigationTree(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
+	// TODO: allow disabling locale folder
 	const navigationLinksByLocale: NavigationLinksForLocale = {};
 
 	for (let localeFolder of content.nestedContent) {
@@ -44,6 +46,7 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			isIndex: localeFolder.isIndex,
 		};
 
+		// TODO: allow disabling version
 		rootContent.pathSection += `/${config.versionToPublish()}`;
 
 		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
@@ -128,13 +131,17 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 	};
 }
 
-async function createPages(contentCache: ContentCache, navigationLinksByLocale: NavigationLinksForLocale) {
+async function createPages(
+	contentCache: ContentCache,
+	navigationLinksByLocale: NavigationLinksForLocale,
+): Promise<void> {
 	const templates = await Templates();
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
 		console.log("Generating page ", filePath);
 
 		const template = await templates.getTemplate(content.template || config.defaultPageTemplate());
+
 		const pageContent = template({
 			pageTitle: content.title,
 			mainContent: content.content,
@@ -152,10 +159,32 @@ export async function copyImages(): Promise<void> {
 	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
 }
 
+async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLocale): Promise<void> {
+	const versions = await getAllVersions(navigationLinksByLocale);
+	const versionsFilePath = config.outputFolder("versions.json");
+
+	console.log(`Creating versions file ${versionsFilePath}`)
+
+	await createFile(versionsFilePath, JSON.stringify({ versions }));
+}
+
+async function getAllVersions(navigationLinksByLocale: NavigationLinksForLocale): Promise<string[]> {
+	const versions: Set<string> = new Set();
+
+	for (let locale of Object.keys(navigationLinksByLocale)) {
+		const versionsForLocale = await listFilesInDir(config.outputFolder(locale));
+		for (let version of versionsForLocale) {
+			versions.add(version);
+		}
+	}
+	versions.add(config.versionToPublish());
+
+	return Array.from(versions);
+}
+
+
 // TODO: PENDING TASKS
 // TODO
-// - version:
-//   - link to change version
 // - not found page and custom pages
 // - darkmode / light mode: https://dev.to/whitep4nth3r/the-best-lightdark-mode-theme-toggle-in-javascript-368f
 //

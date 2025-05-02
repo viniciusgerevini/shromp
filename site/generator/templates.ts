@@ -56,4 +56,5 @@ function registerHelpers() {
 	Handlebars.registerHelper("getNavClassWhenCurrent", function (navLink: string, currentFile: string) {
 		return navLink === currentFile ? "current" : "";
 	});
+	// TODO maybe provide a way to define custom helpers at project level
 }

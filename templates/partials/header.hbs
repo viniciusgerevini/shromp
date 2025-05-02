@@ -26,12 +26,11 @@
       </select>
     </div>
 
-    {{!-- // TODO: get version list --}}
-    <div class="selector doc-version-selector">
-      <select name="version">
-        <option value="auto">v9.1.0 (Godot 4)</option>
-      </select>
-    </div>
+      <div class="selector doc-version-selector">
+        <select name="version" id="versionSelector">
+          <option value="{{version}}">{{version}}</option>
+        </select>
+      </div>
   </div>
 </header>
 <div class="page-bd">

@@ -63,5 +63,41 @@
 	}
 
 	setTheme(localStorage.getItem("theme"), true);
+
+
+	function formatVersion(version) {
+		const versionParts = version.split("-");
+		if (versionParts.length === 1)  {
+			return `v${version}`;
+		}
+		return `v${versionParts[0]} (Godot ${versionParts[1]})`;
+	}
+
+	async function loadVersions() {
+		const selector = document.getElementById("versionSelector");
+		const currentVersion = selector.value;
+		selector.innerHTML = "";
+
+		try {
+			const response = await fetch("/versions.json");
+			const json = await response.json();
+
+			if (json && json.versions) {
+				const versions = json.versions.sort().reverse();
+				for (let version of versions) {
+					selector.innerHTML += `<option value="${version}" ${version === currentVersion ? 'selected="selected"' : ''}>${formatVersion(version)}</option>`
+				}
+			}
+		} catch (_e) {}
+
+		selector.onchange = (event) => {
+			const currentUrl = window.location.href;
+			const regex = new RegExp(`${currentVersion}\\/?.*`);
+			const newUrl = currentUrl.replace(regex, event.target.value);
+			window.location.href = newUrl;
+		};
+	}
+
+	loadVersions();
 }());
 
