@@ -2,6 +2,7 @@ import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
 import { copyTo, createFile, listFilesInDir } from "./files.ts";
 import Templates from "./templates.ts";
+import { compileSiteAssets, SiteAssets } from "./assets.ts";
 
 interface ContentData {
 	title: string;
@@ -28,7 +29,9 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 	const navigationLinksByLocale = createNavigationTree(content, contentCache);
 
-	await createPages(contentCache, navigationLinksByLocale);
+	const assets = await compileSiteAssets();
+
+	await createPages(contentCache, navigationLinksByLocale, assets);
 	await updateVersionsFiles(navigationLinksByLocale);
 }
 
@@ -134,6 +137,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 async function createPages(
 	contentCache: ContentCache,
 	navigationLinksByLocale: NavigationLinksForLocale,
+	assets: SiteAssets,
 ): Promise<void> {
 	const templates = await Templates();
 
@@ -150,6 +154,7 @@ async function createPages(
 			version: content.version,
 			currentFilePath: filePath,
 			childLinks: content.childLinks,
+			assets,
 		});
 		await createFile(config.outputFolder(filePath), pageContent);
 	}
@@ -186,5 +191,3 @@ async function getAllVersions(navigationLinksByLocale: NavigationLinksForLocale)
 // TODO: PENDING TASKS
 // TODO
 // - not found page and custom pages
-// - darkmode / light mode: https://dev.to/whitep4nth3r/the-best-lightdark-mode-theme-toggle-in-javascript-368f
-//

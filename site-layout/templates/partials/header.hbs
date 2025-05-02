@@ -11,9 +11,9 @@
     <meta name="description" content="Aseprite Wizard for Godot docs" />
     <meta name="keywords" content="aseprite wizard,aseprite,godot,plugin" />
 
-    <link rel="stylesheet" href="/assets/styles/reset.css" type="text/css"/>
-    <link rel="stylesheet" href="/assets/styles/main.css" type="text/css"/>
-    <link rel="stylesheet" href="/assets/styles/font.css" type="text/css"/>
+    {{#each assets.styles}}
+      <link rel="stylesheet" href="{{this}}" type="text/css"/>
+    {{/each}}
   </head>
 <body>
 <header class="page-header">

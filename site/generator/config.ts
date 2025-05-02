@@ -45,8 +45,16 @@ export default {
    * Folder where handlebars templates are stored
    */
   templatesFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../templates/", args);
+    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-layout/templates/", args);
   },
+
+  /**
+   * Folder where the site theme styles and scripts are saved
+   */
+  siteAssetsFolder(...args: string[]): string {
+    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-layout/assets/", args);
+  },
+
 
   /**
    * Default template to use for pages when not set as metadata

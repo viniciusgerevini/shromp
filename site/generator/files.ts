@@ -1,4 +1,5 @@
-import { Dirent } from 'node:fs';
+import { createReadStream, Dirent } from 'node:fs';
+import crypto from "crypto";
 import {
 	FileHandle,
 	cp,
@@ -101,4 +102,8 @@ export async function listFilesInDir(dirPath: string): Promise<string[]> {
 
 export async function copyTo(fromPath: string, toPath: string): Promise<void> {
 	await cp(fromPath, toPath, { recursive: true });
+}
+
+export function generateHashForContent(content: string, length: number = 5): string {
+	return crypto.createHash('shake256', { outputLength: length}).update(content).digest('hex');
 }
