@@ -4,7 +4,7 @@ Importing animations via the Inspector Docks is handy, but it makes it harder to
 
 You can find the manager under `Project -> Tools -> Aseprite Wizard -> Imports Manager...`.
 
-![Imports](../assets/images/imports_manager.png?center)
+![Imports](../../../assets/images/imports_manager.png?center)
 
 In this screen you can see all the nodes in your project imported using the Inspector Dock. From here, you can re-import any file, as well as select multiple files to import in one go.
 
