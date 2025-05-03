@@ -45,14 +45,14 @@ export default {
    * Folder where handlebars templates are stored
    */
   templatesFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-layout/templates/", args);
+    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-theme/templates/", args);
   },
 
   /**
    * Folder where the site theme styles and scripts are saved
    */
   siteAssetsFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-layout/assets/", args);
+    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-theme/assets/", args);
   },
 
 

@@ -68,9 +68,9 @@
 	function formatVersion(version) {
 		const versionParts = version.split("-");
 		if (versionParts.length === 1)  {
-			return `v${version}`;
+			return version;
 		}
-		return `v${versionParts[0]} (Godot ${versionParts[1]})`;
+		return `${versionParts[0]} (Godot ${versionParts[1]})`;
 	}
 
 	async function loadVersions() {
