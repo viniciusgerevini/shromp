@@ -9,7 +9,7 @@ export default {
    * for selected languge.
    */
   defaultLocale(): string {
-    return process.env.VGEN_DEFAULT_LOCALE || "en";
+    return process.env.SHROMP_DEFAULT_LOCALE || "en";
   },
 
   /**
@@ -17,42 +17,42 @@ export default {
    * root
    */
   baseUrl(): string {
-    return process.env.VGEN_BASE_URL || "/";
+    return process.env.SHROMP_BASE_URL || "/";
   },
 
   /**
    * Documentation version (files will be nested in this folder)
    */
   versionToPublish(): string {
-    return process.env.VGEN_VERSION_TO_PUBLISH || "1.0.0";
+    return process.env.SHROMP_VERSION_TO_PUBLISH || "1.0.0";
   },
 
   /**
    * Folder where the source markdown files are located
    */
   sourceFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_SOURCE_FOLDER || "../docs/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_SOURCE_FOLDER || "../docs/", args);
   },
 
   /**
    * Folder where generated HTML should be saved
    */
   outputFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_OUTPUT_FOLDER || "../public/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_OUTPUT_FOLDER || "../public/", args);
   },
 
   /**
    * Folder where handlebars templates are stored
    */
   templatesFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-theme/templates/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_TEMPLATES_FOLDER || "../site-theme/templates/", args);
   },
 
   /**
    * Folder where the site theme styles and scripts are saved
    */
   siteAssetsFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.VGEN_TEMPLATES_FOLDER || "../site-theme/assets/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_ASSETS_FOLDER || "../site-theme/assets/", args);
   },
 
 
@@ -60,7 +60,7 @@ export default {
    * Default template to use for pages when not set as metadata
    */
   defaultPageTemplate(): string {
-    return process.env.VGEN_DEFAULT_PAGE_TEMPLATE || "page";
+    return process.env.SHROMP_DEFAULT_PAGE_TEMPLATE || "page";
   },
 }
 
