@@ -1,3 +1,6 @@
+/**
+ * This module is responsible for interacting with the file system
+ */
 import { Dirent } from 'node:fs';
 import crypto from "crypto";
 import {
@@ -27,6 +30,9 @@ interface GetFileTreeOptions {
 	excludeEmptyFolders?: boolean;
 }
 
+/**
+ * Return a file tree representation with all the relevant markdown files and folders.
+ */
 export async function getFileTree(dirPath: string, options: GetFileTreeOptions = {}): Promise<DirNode> {
 	const thisDir: DirNode = {
 		name: sanitizeName(path.basename(dirPath)),

@@ -1,3 +1,6 @@
+/**
+ * This module handle asset files (i.e. styles, frontend scripts).
+ */
 import path from "node:path";
 import config from "./config.ts";
 import { createFile, generateHashForContent, listFilesInDir, readFileContent } from "./files.ts";

@@ -1,3 +1,6 @@
+/**
+ * Handle Handlebars templates and helpers.
+ */
 import path from "path";
 import Handlebars from "handlebars";
 
@@ -34,6 +37,8 @@ async function loadPartials() {
 }
 
 function registerHelpers() {
+	// Helper to return the initial state for the navigation menu, such as
+	// which menu item should be expanded or not when loading the page
 	Handlebars.registerHelper("getNavCurrentState", (navLink: string, currentFile: string) => {
 		// skip anchors as they can't be expanded
 		if (navLink.includes("#")) {
@@ -53,8 +58,11 @@ function registerHelpers() {
 		return "collapsed";
 	});
 
+	// Helper to return the "current" class when the navigation link refers to the
+	// current file
 	Handlebars.registerHelper("getNavClassWhenCurrent", function (navLink: string, currentFile: string) {
 		return navLink === currentFile ? "current" : "";
 	});
+
 	// TODO maybe provide a way to define custom helpers at project level
 }

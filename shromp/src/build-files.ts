@@ -1,3 +1,6 @@
+/**
+ * Module responsible for generating the target files.
+ */
 import { ContentAnchor, ContentNode } from "./content-convertion.ts";
 import config from "./config.ts";
 import { copyTo, createFile, listFilesInDir } from "./files.ts";

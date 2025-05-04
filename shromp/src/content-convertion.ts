@@ -1,3 +1,6 @@
+/**
+ * Module responsible for converting files from markdown to HTML.
+ */
 import path from "node:path";
 import { Marked } from 'marked';
 import { gfmHeadingId, getHeadingList } from "marked-gfm-heading-id";
