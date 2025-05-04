@@ -89,9 +89,8 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 
 	mkd.use({ hooks: {
 		preprocess(markdown: string): string | Promise<string> {
-			if (markdown.startsWith("<!--")) {
-				const metadata = extractMetadata(markdown);
-
+			const metadata = extractMetadata(markdown);
+			if (metadata) {
 				if (metadata.title) {
 					title = metadata.title;
 				}
@@ -129,7 +128,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 				if (!img.href.startsWith(".")) {
 					return false;
 				}
-				let targetPath = img.href.replaceAll(/\.\.\/+/g, "/");
+				let targetPath = img.href.replaceAll(/(\.\.\/)+/g, "/");
 				let shouldCentralize = false;
 
 				if (targetPath.includes("?center")) {
@@ -137,7 +136,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 					shouldCentralize = true;
 				}
 
-				return `<img src="${targetPath}" alt="${img.text}" ${shouldCentralize ? 'class="img-center"' : ''} />`
+				return `<img src="${targetPath}" alt="${img.text}" ${shouldCentralize ? 'class="img-center"' : ''}/>`
 			},
 		}
 	});
@@ -179,10 +178,10 @@ interface ContentMetadata {
 	doNotShowInNavigation?: boolean;
 }
 
-function extractMetadata(content: string): ContentMetadata {
+function extractMetadata(content: string): ContentMetadata | undefined {
 	const m = /^<!--[^<]+-->\n/s.exec(content);
 	if (!m) {
-		return {};
+		return;
 	}
 	const metadata: ContentMetadata = {};
 	const lines = m[0].split("\n");

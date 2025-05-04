@@ -295,5 +295,91 @@ describe('content', () => {
 
 			assert.deepEqual(contentTree, expectedContentTree);
 		});
+
+		it("transforms links to target paths", async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '# Doc index File\n [another page](../01-page.md) [external link](https://thisisvini.com)' },
+			});
+
+			const expectedContentTree = {
+				title: 'Doc index File',
+				pathSection: 'docs',
+				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+					'<p> <a href="../page.html">another page</a> <a href="https://thisisvini.com">external link</a></p>\n',
+				anchors: [],
+				doNotShowInNavigation: false,
+				nestedContent: [],
+				isIndex: true,
+				template: undefined,
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it("transforms images paths to target folder", async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '![some image](../../../assets/image.png) ![image 2](/absolute.png)' },
+			});
+
+			const expectedContentTree = {
+				title: undefined,
+				pathSection: 'docs',
+				htmlContent: '<p><img src="/assets/image.png" alt="some image" /> <img src="/absolute.png" alt="image 2"></p>\n',
+				anchors: [],
+				doNotShowInNavigation: false,
+				nestedContent: [],
+				isIndex: true,
+				template: undefined,
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it("adds centralize styling to image when center parameter used", async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '![some image](../assets/image.png?center)' },
+			});
+
+			const expectedContentTree = {
+				title: undefined,
+				pathSection: 'docs',
+				htmlContent: '<p><img src="/assets/image.png" alt="some image" class="img-center"/></p>\n',
+				anchors: [],
+				doNotShowInNavigation: false,
+				nestedContent: [],
+				isIndex: true,
+				template: undefined,
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
 	});
+
 });

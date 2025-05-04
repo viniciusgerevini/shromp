@@ -1,6 +1,6 @@
 import { describe, it, afterEach } from 'node:test';
 import * as assert from "node:assert";
-import { createFile, DirNode, getFileTree, readFileContent } from './files.ts';
+import { copyTo, createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, readFileContent } from './files.ts';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -234,6 +234,27 @@ describe('files', () => {
 			const result = await readFileContent(filePath);
 
 			assert.equal(result, testFileContent);
+		});
+	});
+
+	describe("#listFilesInDir", () => {
+		it("returns all file names in directory", async () => {
+			mockFs({
+				'./docs': {
+					'banana': 'some content',
+					'apple': 'some content',
+					'pineapple': 'some content',
+				},
+			});
+			const files = await listFilesInDir("./docs");
+			assert.deepEqual(files, ["apple", "banana", "pineapple"]);
+		});
+	});
+
+	describe("#generateHashForContent", () => {
+		it("generates a short hash for content", () => {
+			assert.equal(generateHashForContent("content"), "e8eea478e0");
+			assert.equal(generateHashForContent("content", 10), "e8eea478e010638d2b0a");
 		});
 	});
 });
