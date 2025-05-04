@@ -6,6 +6,7 @@ import config from "./config.ts";
 import { copyTo, createFile, listFilesInDir } from "./files.ts";
 import Templates from "./templates.ts";
 import { compileSiteAssets, SiteAssets } from "./assets.ts";
+import path from "node:path";
 
 interface ContentData {
 	title: string;
@@ -26,6 +27,10 @@ interface NavigationLink {
 	children?: NavigationLink[];
 }
 
+export function isNavigationLinksForLocale(node: NavigationLink | NavigationLinksForLocale): node is NavigationLinksForLocale {
+	return (node as NavigationLink).path === undefined;
+}
+
 type NavigationLinksForLocale = {[locale: string]: NavigationLink };
 
 const templates = await Templates();
@@ -33,7 +38,11 @@ const templates = await Templates();
 export async function createSiteFromContent(content: ContentNode): Promise<void> {
 	const contentCache: ContentCache = {};
 
-	const navigationLinksByLocale = createNavigationTree(content, contentCache);
+	const navigationLinks = config.areLocalesEnabled() ?
+		createNavigationTreeForLocale(content, contentCache) :
+		createNavigationTreeForRoot(content, contentCache);
+
+	console.log(navigationLinks);
 
 	const assets = await compileSiteAssets();
 
@@ -41,10 +50,10 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 		await createDocIndexPage(content, assets);
 	}
 
-	await createPages(contentCache, navigationLinksByLocale, assets);
+	await createPages(contentCache, navigationLinks, assets);
 
 	if (config.isVersioningEnabled()) {
-		await updateVersionsFiles(navigationLinksByLocale);
+		await updateVersionsFiles(isNavigationLinksForLocale(navigationLinks) ? navigationLinks : "/");
 	}
 }
 
@@ -53,12 +62,13 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		console.log("Doc index is present, but configured to skip generation.");
 		return;
 	}
+	const indexPath = path.join("/", "index.html");
 	console.log("Creating docs index");
-	await createPage("/index.html", {
+	await createPage(indexPath, {
 		template: content.template,
 		pageTitle: content.title,
 		mainContent: content.htmlContent,
-		currentFilePath: "/index.html",
+		currentFilePath: indexPath,
 		metadata: content.metadata,
 		locale: config.defaultLocale(),
 		version: config.isVersioningEnabled() ? config.versionToPublish() : undefined,
@@ -66,36 +76,50 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 	});
 }
 
-function createNavigationTree(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
-	// TODO: allow disabling locale folder
+function createNavigationTreeForLocale(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
 	const navigationLinksByLocale: NavigationLinksForLocale = {};
 
 	for (let localeFolder of content.nestedContent) {
-		const rootContent: ContentNode = {
-			title: localeFolder.title,
-			pathSection: localeFolder.pathSection,
-			htmlContent: localeFolder.htmlContent,
-			anchors: localeFolder.anchors,
-			nestedContent: localeFolder.nestedContent,
-			isIndex: localeFolder.isIndex,
-			doNotShowInNavigation: localeFolder.doNotShowInNavigation, 
-			metadata: localeFolder.metadata,
-		};
 
-		if (config.isVersioningEnabled()) {
-			rootContent.pathSection += `/${config.versionToPublish()}`;
-		}
-
-		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
-			content: rootContent,
+		navigationLinksByLocale[localeFolder.pathSection] = createNavigationTree(
+			localeFolder,
 			contentCache,
-			locale: localeFolder.pathSection,
-			version: config.versionToPublish(),
-			basePath: "",
-		});
+			localeFolder.pathSection
+		);
 	}
 
 	return navigationLinksByLocale;
+}
+
+function createNavigationTreeForRoot(content: ContentNode, contentCache: ContentCache): NavigationLink {
+	const rootContent: ContentNode = {
+		...content,
+		pathSection: "/",
+	};
+
+	return createNavigationTree(rootContent, contentCache);
+}
+
+function createNavigationTree(
+	content: ContentNode,
+	contentCache: ContentCache,
+	locale: string = config.defaultLocale()
+): NavigationLink {
+	const rootContent: ContentNode = {
+		...content
+	};
+
+	if (config.isVersioningEnabled()) {
+		rootContent.pathSection = path.join(rootContent.pathSection, config.versionToPublish());
+	}
+
+	return createNavigationLinks({
+		content: rootContent,
+		contentCache,
+		locale,
+		version: config.versionToPublish(),
+		basePath: "/",
+	});
 }
 
 interface CreateNavigationLinksParams {
@@ -107,8 +131,8 @@ interface CreateNavigationLinksParams {
 }
 
 function createNavigationLinks({ content, contentCache, locale, version, basePath = "" } : CreateNavigationLinksParams): NavigationLink {
-	const thisPath = `${basePath}/${content.pathSection}`;
-	const filePath = content.isIndex ? `${thisPath}/index.html` : `${thisPath}.html`;
+	const thisPath = path.join(basePath, content.pathSection);
+	const filePath = content.isIndex ? path.join(thisPath, "index.html") : `${thisPath}.html`;
 
 	const mapAnchor = (anchor: ContentAnchor): NavigationLink => {
 		return {
@@ -177,7 +201,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 
 async function createPages(
 	contentCache: ContentCache,
-	navigationLinksByLocale: NavigationLinksForLocale,
+	navigationLinks: NavigationLinksForLocale | NavigationLink,
 	assets: SiteAssets,
 ): Promise<void> {
 
@@ -188,7 +212,7 @@ async function createPages(
 			template: content.template,
 			pageTitle: content.title,
 			mainContent: content.content,
-			navigationMenu: navigationLinksByLocale[content.locale],
+			navigationMenu: isNavigationLinksForLocale(navigationLinks) ? navigationLinks[content.locale] : navigationLinks,
 			locale: content.locale,
 			version: config.isVersioningEnabled() ? content.version : undefined,
 			currentFilePath: filePath,
@@ -209,8 +233,9 @@ export async function copyImages(): Promise<void> {
 	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
 }
 
-async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLocale): Promise<void> {
+async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLocale | string ): Promise<void> {
 	const versions = await getAllVersions(navigationLinksByLocale);
+
 	const versionsFilePath = config.outputFolder("versions.json");
 
 	console.log(`Creating versions file ${versionsFilePath}`)
@@ -218,16 +243,28 @@ async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLo
 	await createFile(versionsFilePath, JSON.stringify({ versions }));
 }
 
-async function getAllVersions(navigationLinksByLocale: NavigationLinksForLocale): Promise<string[]> {
+async function getAllVersions(root: NavigationLinksForLocale | string): Promise<string[]> {
 	const versions: Set<string> = new Set();
 
-	for (let locale of Object.keys(navigationLinksByLocale)) {
-		const versionsForLocale = await listFilesInDir(config.outputFolder(locale));
-		for (let version of versionsForLocale) {
-			versions.add(version);
+	if (typeof root === "string") {
+		await loadItemNamesFromFolder(root, versions);
+	} else {
+		for (let locale of Object.keys(root)) {
+			await loadItemNamesFromFolder(locale, versions);
 		}
 	}
+
 	versions.add(config.versionToPublish());
 
 	return Array.from(versions);
 }
+
+async function loadItemNamesFromFolder(rootFolder: string, items: Set<string>): Promise<void> {
+	const itemsInFolder = await listFilesInDir(config.outputFolder(rootFolder));
+
+	for (let item of itemsInFolder) {
+		items.add(item);
+	}
+}
+
+
