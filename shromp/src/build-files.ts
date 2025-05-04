@@ -42,7 +42,10 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 	}
 
 	await createPages(contentCache, navigationLinksByLocale, assets);
-	await updateVersionsFiles(navigationLinksByLocale);
+
+	if (!config.isVersioningDisabled()) {
+		await updateVersionsFiles(navigationLinksByLocale);
+	}
 }
 
 async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Promise<void> {
@@ -58,7 +61,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		currentFilePath: "/index.html",
 		metadata: content.metadata,
 		locale: config.defaultLocale(),
-		version: config.versionToPublish(),
+		version: config.isVersioningDisabled() ? undefined : config.versionToPublish(),
 		assets,
 	});
 }
@@ -79,8 +82,9 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			metadata: localeFolder.metadata,
 		};
 
-		// TODO: allow disabling version
-		rootContent.pathSection += `/${config.versionToPublish()}`;
+		if (!config.isVersioningDisabled()) {
+			rootContent.pathSection += `/${config.versionToPublish()}`;
+		}
 
 		navigationLinksByLocale[localeFolder.pathSection] = createNavigationLinks({
 			content: rootContent,
@@ -186,7 +190,7 @@ async function createPages(
 			mainContent: content.content,
 			navigationMenu: navigationLinksByLocale[content.locale],
 			locale: content.locale,
-			version: content.version,
+			version: config.isVersioningDisabled() ? undefined : content.version,
 			currentFilePath: filePath,
 			childLinks: content.childLinks,
 			metadata: content.metadata,

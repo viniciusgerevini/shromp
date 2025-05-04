@@ -65,9 +65,14 @@ export default {
 
   /**
    * Can disable doc index generation even when index.md is present
+   * default: false
    */
   shouldGenerateDocIndex(): boolean {
     return process.env.SHROMP_GENERATE_DOC_INDEX !== "false";
+  },
+
+  isVersioningDisabled(): boolean {
+    return process.env.SHROMP_DISABLE_VERSIONS === "true";
   },
 }
 
