@@ -71,8 +71,18 @@ export default {
     return process.env.SHROMP_GENERATE_DOC_INDEX !== "false";
   },
 
-  isVersioningDisabled(): boolean {
-    return process.env.SHROMP_DISABLE_VERSIONS === "true";
+  /**
+  * default: true
+  */
+  isVersioningEnabled(): boolean {
+    return process.env.SHROMP_ENABLE_VERSIONS === "true";
+  },
+
+  /**
+  * default: true
+  */
+  areLocalesEnabled(): boolean {
+    return process.env.SHROMP_ENABLE_LOCALES === "true";
   },
 }
 
