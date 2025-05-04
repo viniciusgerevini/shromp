@@ -17,6 +17,7 @@ export interface ContentNode {
 	isIndex: boolean;
 	template?: string;
 	doNotShowInNavigation: boolean;
+	metadata: ContentMetadata["keys"];
 }
 
 export interface ContentAnchor {
@@ -42,6 +43,8 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			nestedContent: [],
 			isIndex: false,
 			doNotShowInNavigation: false,
+			metadata: {},
+			template: undefined,
 		};
 		if (sourceNode.hasIndex) {
 			const indexNode = await generateContentForFile(path.join(sourceNode.path, "index.md"));
@@ -51,6 +54,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			dirContentNode.isIndex = true;
 			dirContentNode.template = indexNode.template;
 			dirContentNode.doNotShowInNavigation = indexNode.doNotShowInNavigation;
+			dirContentNode.metadata = indexNode.metadata;
 		}
 
 		dirContentNode.nestedContent = await Promise.all(sourceNode.children.map(contentForNode));
@@ -75,6 +79,7 @@ interface ContentForFileResult {
 	anchors: ContentAnchor[];
 	template: string | undefined;
 	doNotShowInNavigation: boolean;
+	metadata: ContentMetadata["keys"];
 }
 
 async function generateContentForFile(filePath: string): Promise<ContentForFileResult> {
@@ -84,27 +89,31 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	let title: string | undefined = undefined;
 	let template: string | undefined = undefined;
 	let doNotShowInNavigation: boolean = false;
+	let metadata: ContentMetadata["keys"] = {};
 
 	const mkd = new Marked();
 
 	mkd.use({ hooks: {
 		preprocess(markdown: string): string | Promise<string> {
-			const metadata = extractMetadata(markdown);
-			if (metadata) {
-				if (metadata.title) {
-					title = metadata.title;
+			const meta = extractMetadata(markdown);
+			if (meta) {
+				metadata = meta.keys;
+
+				if (metadata.page_title) {
+					title = metadata.page_title;
 				}
 				if (metadata.template) {
 					template = metadata.template;
+					delete metadata.template;
 				}
-				if (metadata.headingNavMaxLevel || metadata.headingNavMaxLevel === 0) {
-					headingAnchorsMaxLevel = metadata.headingNavMaxLevel;
+				if (metadata.headings_nav_max_level || metadata.headings_nav_max_level === 0) {
+					headingAnchorsMaxLevel = metadata.headings_nav_max_level;
 				}
-				if (metadata.doNotShowInNavigation) {
-					doNotShowInNavigation = metadata.doNotShowInNavigation;
+				if (metadata.do_not_show_in_nav) {
+					doNotShowInNavigation = metadata.do_not_show_in_nav;
 				}
-				if (metadata.contentToRemove) {
-					return markdown.replace(metadata.contentToRemove, "");
+				if (meta.contentToRemove) {
+					return markdown.replace(meta.contentToRemove, "");
 				}
 			}
 
@@ -161,6 +170,7 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 		anchors,
 		template,
 		doNotShowInNavigation,
+		metadata,
 	}
 }
 
@@ -171,11 +181,8 @@ function transformLinkToTarget(link: string): string {
 }
 
 interface ContentMetadata {
-	template?: string;
-	title?: string;
-	headingNavMaxLevel?: number;
-	contentToRemove?: string;
-	doNotShowInNavigation?: boolean;
+	contentToRemove: string;
+	keys: { [key: string]: any };
 }
 
 function extractMetadata(content: string): ContentMetadata | undefined {
@@ -183,31 +190,35 @@ function extractMetadata(content: string): ContentMetadata | undefined {
 	if (!m) {
 		return;
 	}
-	const metadata: ContentMetadata = {};
+
+	const metadata: ContentMetadata = {
+		contentToRemove: m[0],
+		keys: {},
+	};
+
 	const lines = m[0].split("\n");
 	const relevantLines = lines.slice(1, lines.length - 1);
 
 	for (let line of relevantLines) {
 		const [key, value] = line.split(":");
-
-		if (key.trim() === "template") {
-			metadata.template = value.trim();
+		if (key.startsWith("-")) {
 			continue;
 		}
+		const metadataKey = key.trim();
+		const metadataRawValue = value ? value.trim() : "true";
 
-		if (key.trim() === "title") {
-			metadata.title = value.trim();
-			continue;
-		}
-
-		if (key.trim() === "headings-nav-max-level") {
-			metadata.headingNavMaxLevel = parseInt(value.trim());
-		}
-
-		if (key.trim() === "do-not-show-in-nav") {
-			metadata.doNotShowInNavigation = value.trim() === "true";
-		}
+		metadata.keys[metadataKey] = parseMetadataValue(metadataRawValue); 
 	}
-	metadata.contentToRemove = m[0];
+
 	return metadata;
+}
+
+function parseMetadataValue(value: string) {
+	if (value.match(/[/^\d+$/]/)) {
+		return parseFloat(value);
+	}
+	if (value === "false" || value === "true") {
+		return value === "true";
+	}
+	return value;
 }

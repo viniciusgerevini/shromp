@@ -13,6 +13,7 @@ interface ContentData {
 	locale: string;
 	version?: string;
 	template: string | undefined;
+	metadata: ContentNode["metadata"];
 	childLinks: NavigationLink[];
 }
 
@@ -55,6 +56,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		pageTitle: content.title,
 		mainContent: content.htmlContent,
 		currentFilePath: "/index.html",
+		metadata: content.metadata,
 		locale: config.defaultLocale(),
 		version: config.versionToPublish(),
 		assets,
@@ -74,6 +76,7 @@ function createNavigationTree(content: ContentNode, contentCache: ContentCache):
 			nestedContent: localeFolder.nestedContent,
 			isIndex: localeFolder.isIndex,
 			doNotShowInNavigation: localeFolder.doNotShowInNavigation, 
+			metadata: localeFolder.metadata,
 		};
 
 		// TODO: allow disabling version
@@ -156,6 +159,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 			version,
 			template: content.template,
 			childLinks: children,
+			metadata: content.metadata,
 		};
 	}
 
@@ -185,6 +189,7 @@ async function createPages(
 			version: content.version,
 			currentFilePath: filePath,
 			childLinks: content.childLinks,
+			metadata: content.metadata,
 			assets,
 		});
 	}
