@@ -62,6 +62,13 @@ export default {
   defaultPageTemplate(): string {
     return process.env.SHROMP_DEFAULT_PAGE_TEMPLATE || "page";
   },
+
+  /**
+   * Can disable doc index generation even when index.md is present
+   */
+  shouldGenerateDocIndex(): boolean {
+    return process.env.SHROMP_GENERATE_DOC_INDEX !== "false";
+  },
 }
 
 function folderPathAssemblyHelper(folder: string, args: string[]) {

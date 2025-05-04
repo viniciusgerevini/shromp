@@ -45,6 +45,10 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 }
 
 async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Promise<void> {
+	if (!config.shouldGenerateDocIndex()) {
+		console.log("Doc index is present, but configured to skip generation.");
+		return;
+	}
 	console.log("Creating docs index");
 	await createPage("/index.html", {
 		template: content.template,
@@ -52,6 +56,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		mainContent: content.htmlContent,
 		currentFilePath: "/index.html",
 		locale: config.defaultLocale(),
+		version: config.versionToPublish(),
 		assets,
 	});
 }
