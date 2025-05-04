@@ -47,6 +47,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			dirContentNode.anchors = indexNode.anchors;
 			dirContentNode.isIndex = true;
 			dirContentNode.template = indexNode.template;
+			dirContentNode.doNotShowInNavigation = indexNode.doNotShowInNavigation;
 		}
 
 		dirContentNode.nestedContent = await Promise.all(sourceNode.children.map(contentForNode));

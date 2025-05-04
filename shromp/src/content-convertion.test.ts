@@ -35,11 +35,13 @@ describe('content', () => {
 				pathSection: 'docs',
 				htmlContent: null,
 				anchors: [],
+				doNotShowInNavigation: false,
 				nestedContent: [{
 					title: 'Some File',
 					pathSection: 'somefile',
 					htmlContent: '<h1 id="aid-some-file">Some File</h1>\n<p> with content</p>\n',
 					anchors: [],
+					doNotShowInNavigation: false,
 					nestedContent: [],
 					isIndex: false,
 					template: undefined,
@@ -75,6 +77,7 @@ describe('content', () => {
 				htmlContent: null,
 				isIndex: false,
 				anchors: [],
+				doNotShowInNavigation: false,
 				nestedContent: [{
 					title: 'Some File',
 					pathSection: 'somefile',
@@ -86,6 +89,7 @@ describe('content', () => {
 						{ id: 'aid-a-secondary-title', name: 'A secondary title', level: 2 },
 						{ id: 'aid-another-secondary-title', name: 'Another secondary title', level: 2 },
 					],
+					doNotShowInNavigation: false,
 					nestedContent: [],
 					isIndex: false,
 					template: undefined,
@@ -120,6 +124,7 @@ describe('content', () => {
 					{ id: 'aid-a-secondary-title', name: 'A secondary title', level: 2 },
 					{ id: 'aid-another-secondary-title', name: 'Another secondary title', level: 2 },
 				],
+				doNotShowInNavigation: false,
 				nestedContent: [],
 				isIndex: true,
 				template: undefined,
@@ -152,11 +157,13 @@ describe('content', () => {
 				pathSection: 'docs',
 				htmlContent: null,
 				anchors: [],
+				doNotShowInNavigation: false,
 				nestedContent: [{
 					title: 'somefile',
 					pathSection: 'somefile',
 					htmlContent: '<p>Some file with no heading</p>\n',
 					anchors: [],
+					doNotShowInNavigation: false,
 					nestedContent: [],
 					isIndex: false,
 					template: undefined,
@@ -187,6 +194,7 @@ describe('content', () => {
 				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				anchors: [],
+				doNotShowInNavigation: false,
 				nestedContent: [],
 				isIndex: true,
 				template: undefined,
@@ -219,6 +227,7 @@ describe('content', () => {
 				anchors: [
 					{ id: 'aid-include', name: 'include', level: 2 },
 				],
+				doNotShowInNavigation: false,
 				nestedContent: [],
 				isIndex: true,
 				template: undefined,
@@ -247,9 +256,39 @@ describe('content', () => {
 				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				anchors: [],
+				doNotShowInNavigation: false,
 				nestedContent: [],
 				isIndex: true,
 				template: "test-template",
+			};
+
+			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it('set doNotShowInNavigation via metadata', async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFs({
+				'./docs': { 'index.md': '<!--\ndo-not-show-in-nav: true\n-->\n# Doc index File\n with content' },
+			});
+
+			const expectedContentTree = {
+				title: 'Doc index File',
+				pathSection: 'docs',
+				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+					'<p> with content</p>\n',
+				anchors: [],
+				doNotShowInNavigation: true,
+				nestedContent: [],
+				isIndex: true,
+				template: undefined,
 			};
 
 			const contentTree = await generateHtmlForTree(fileTree);
