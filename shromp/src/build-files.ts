@@ -27,6 +27,8 @@ interface NavigationLink {
 
 type NavigationLinksForLocale = {[locale: string]: NavigationLink };
 
+const templates = await Templates();
+
 export async function createSiteFromContent(content: ContentNode): Promise<void> {
 	const contentCache: ContentCache = {};
 
@@ -34,8 +36,23 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 	const assets = await compileSiteAssets();
 
+	if (content.isIndex) {
+		await createDocIndexPage(content, assets);
+	}
+
 	await createPages(contentCache, navigationLinksByLocale, assets);
 	await updateVersionsFiles(navigationLinksByLocale);
+}
+
+async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Promise<void> {
+	console.log("Creating docs index");
+	await createPage("/index.html", {
+		template: content.template,
+		pageTitle: content.title,
+		mainContent: content.htmlContent,
+		currentFilePath: "/index.html",
+		assets,
+	});
 }
 
 function createNavigationTree(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
@@ -149,14 +166,12 @@ async function createPages(
 	navigationLinksByLocale: NavigationLinksForLocale,
 	assets: SiteAssets,
 ): Promise<void> {
-	const templates = await Templates();
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
 		console.log("Generating page ", filePath);
 
-		const template = await templates.getTemplate(content.template || config.defaultPageTemplate());
-
-		const pageContent = template({
+		await createPage(filePath, {
+			template: content.template,
 			pageTitle: content.title,
 			mainContent: content.content,
 			navigationMenu: navigationLinksByLocale[content.locale],
@@ -166,8 +181,13 @@ async function createPages(
 			childLinks: content.childLinks,
 			assets,
 		});
-		await createFile(config.outputFolder(filePath), pageContent);
 	}
+}
+
+async function createPage(filePath: string, content: any): Promise<void> {
+	const template = await templates.getTemplate(content.template || config.defaultPageTemplate());
+	const pageContent = template(content);
+	await createFile(config.outputFolder(filePath), pageContent);
 }
 
 export async function copyImages(): Promise<void> {

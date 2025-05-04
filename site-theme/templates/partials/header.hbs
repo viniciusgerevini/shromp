@@ -26,11 +26,13 @@
       </select>
     </div>
 
+    {{#if version }}
       <div class="selector doc-version-selector">
         <select name="version" id="versionSelector">
           <option value="{{version}}">{{version}}</option>
         </select>
       </div>
+    {{/if}}
   </div>
 </header>
 <div class="page-bd">
