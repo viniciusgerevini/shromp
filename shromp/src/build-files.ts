@@ -51,6 +51,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		pageTitle: content.title,
 		mainContent: content.htmlContent,
 		currentFilePath: "/index.html",
+		locale: config.defaultLocale(),
 		assets,
 	});
 }
