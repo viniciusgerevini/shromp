@@ -1,7 +1,7 @@
 /**
  * This module is responsible for interacting with the file system
  */
-import { Dirent } from 'node:fs';
+import { Dirent, existsSync } from 'node:fs';
 import crypto from "crypto";
 import {
 	FileHandle,
@@ -112,4 +112,8 @@ export async function copyTo(fromPath: string, toPath: string): Promise<void> {
 
 export function generateHashForContent(content: string, length: number = 5): string {
 	return crypto.createHash('shake256', { outputLength: length}).update(content).digest('hex');
+}
+
+export function fileExists(filePath: string): boolean {
+	return existsSync(filePath);
 }

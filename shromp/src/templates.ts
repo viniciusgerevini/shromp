@@ -5,10 +5,10 @@ import path from "path";
 import Handlebars from "handlebars";
 
 import config from "./config.ts";
-import { listFilesInDir, readFileContent } from "./files.ts";
+import { fileExists, listFilesInDir, readFileContent } from "./files.ts";
 
 export default async function templates() {
-  registerHelpers();
+  await registerHelpers();
 	await loadPartials();
 
 	const templates: {[templateName: string]: HandlebarsTemplateDelegate} = {};
@@ -36,33 +36,19 @@ async function loadPartials() {
 	}
 }
 
-function registerHelpers() {
-	// Helper to return the initial state for the navigation menu, such as
-	// which menu item should be expanded or not when loading the page
-	Handlebars.registerHelper("getNavCurrentState", (navLink: string, currentFile: string) => {
-		// skip anchors as they can't be expanded
-		if (navLink.includes("#")) {
-			return "no-expand";
+async function registerHelpers() {
+	const helperImportPath = config.templatesFolder("helpers.js");
+
+	if (!fileExists(helperImportPath)) {
+		return;
+	}
+
+	const helpers = await import("../" + helperImportPath);
+
+	for (let key in helpers) {
+		if (typeof helpers[key] === "function") {
+			console.log("Registering template helper:", key);
+			Handlebars.registerHelper(key, helpers[key]);
 		}
-
-		const navLinkWithoutIndex = navLink.replace("/index.html", "");
-		const currentFileWithoutIndex = currentFile.replace("/index.html", "");
-
-		if (currentFileWithoutIndex.split("/").length === 2) {
-			return;
-		}
-
-		if (currentFileWithoutIndex.includes(navLinkWithoutIndex)) {
-			return "loaded-expanded";
-		}
-		return "collapsed";
-	});
-
-	// Helper to return the "current" class when the navigation link refers to the
-	// current file
-	Handlebars.registerHelper("getNavClassWhenCurrent", function (navLink: string, currentFile: string) {
-		return navLink === currentFile ? "current" : "";
-	});
-
-	// TODO maybe provide a way to define custom helpers at project level
+	}
 }
