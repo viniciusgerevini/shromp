@@ -47,10 +47,6 @@
 
 	function configureThemeSelector() {
 		const themeSelector = document.getElementById("siteThemeSelector");
-		themeSelector.onchange = (event) => {
-			setTheme(event.target.value);
-			localStorage.setItem("theme", event.target.value);
-		};
 
 		function setTheme(theme, shouldUpdateSelector) {
 			let newTheme = theme;
@@ -61,11 +57,17 @@
 			document.querySelector("html").setAttribute("data-theme", newTheme);
 
 			if (shouldUpdateSelector) {
-				themeSelector.value = theme;
+				themeSelector.value = theme || "auto";
 			}
 		}
 
 		setTheme(localStorage.getItem("theme"), true);
+
+		themeSelector.onchange = (event) => {
+			setTheme(event.target.value);
+			localStorage.setItem("theme", event.target.value);
+		};
+
 	}
 
 	function formatVersion(version) {

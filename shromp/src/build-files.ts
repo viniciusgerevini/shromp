@@ -42,8 +42,6 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 		createNavigationTreeForLocale(content, contentCache) :
 		createNavigationTreeForRoot(content, contentCache);
 
-	console.log(navigationLinks);
-
 	const assets = await compileSiteAssets();
 
 	if (content.isIndex) {

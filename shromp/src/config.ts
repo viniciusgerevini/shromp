@@ -68,21 +68,21 @@ export default {
    * default: false
    */
   shouldGenerateDocIndex(): boolean {
-    return process.env.SHROMP_GENERATE_DOC_INDEX !== "false";
+    return process.env.SHROMP_GENERATE_DOC_INDEX === "true";
   },
 
   /**
   * default: true
   */
   isVersioningEnabled(): boolean {
-    return process.env.SHROMP_ENABLE_VERSIONS === "true";
+    return process.env.SHROMP_ENABLE_VERSIONS !== "false";
   },
 
   /**
   * default: true
   */
   areLocalesEnabled(): boolean {
-    return process.env.SHROMP_ENABLE_LOCALES === "true";
+    return process.env.SHROMP_ENABLE_LOCALES !== "false";
   },
 }
 
