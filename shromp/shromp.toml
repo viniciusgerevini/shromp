@@ -1,0 +1,34 @@
+# Overwrite base URL for assets. Useful when hosting files in any location other than the root
+base_url="/"
+
+# Folder where the source markdown files are located
+source_folder="../docs/"
+
+# Folder where the generated HTML files should be saved
+output_folder="../public/"
+
+# Folder where site theme handlebars templates are located
+theme_folder="./default-theme/"
+
+# Default template used for pages
+default_page_template="page"
+
+# Can disable doc index generation even when index.md is present
+# default: false
+generate_doc_index=false
+
+# Include version in the URL
+# default: true
+enable_versions=true
+
+# Documentation version (files will be nested in this folder)
+version_to_publish="1.0.0"
+
+# When enabled the first folder level are the locales roots
+# and each locale root has independent navigation
+# default: true
+enable_locales=true
+
+# Default site locale. Used in doc index and when enable locales is disabled
+default_locale="en"
+

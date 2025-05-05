@@ -2,9 +2,10 @@ import { generateHtmlForTree } from './content-convertion.ts';
 import { getFileTree } from './files.ts';
 import { copyImages, createSiteFromContent } from './build-files.ts';
 
-import config from "./config.ts";
+import config, { loadConfig } from "./config.ts";
 
 try {
+	await loadConfig();
 	console.log("===== Reading source files =====");
 	const tree = await getFileTree(config.sourceFolder(), { excludeEmptyFolders: true });
 	console.log("===== Converting Markdown to HTML =====");
@@ -21,11 +22,11 @@ try {
 
 // TODO:
 // - make shromp a CLI tool.
-//     - change .env to be a shromp-config.json (or cjson? or toml?)
 //     - index accept args
 //     - cli options
-//        - init (generate files shrom-config, shromp-theme)
+//        - init (generate files shromp config, shromp-theme, docs folder with samples)
 //        - eject (? maybe. Expose shromp files)
 //        - build -- version-to-publish
+//        - make sure the config relative path works
 // - breadcrumbs example
 // - brand default-theme as shromp

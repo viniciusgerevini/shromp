@@ -6,16 +6,16 @@
   "main": "index.js",
   "scripts": {
     "test": "node --import tsx --test --enable-source-maps --experimental-test-module-mocks --test-reporter node-test-reporter",
-    "build": "node --import tsx -r dotenv/config src/index.ts"
+    "build": "node --import tsx src/index.ts"
   },
   "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.5.0",
     "handlebars": "^4.7.8",
     "marked": "^15.0.11",
     "marked-extended-tables": "^2.0.1",
     "marked-gfm-heading-id": "^4.1.1",
+    "toml": "^3.0.0",
     "tsx": "^4.19.3"
   },
   "devDependencies": {

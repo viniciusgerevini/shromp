@@ -1,4 +1,38 @@
+import { existsSync } from "fs";
+import { open, FileHandle } from 'node:fs/promises';
 import path from "path";
+import toml from "toml";
+
+interface Config {
+  default_locale?: string;
+  base_url?: string;
+  source_folder?: string;
+  output_folder?: string;
+  theme_folder?: string;
+  default_page_template?: string;
+  generate_doc_index?: boolean;
+  enable_versions?: boolean;
+  enable_locales?: boolean;
+  version_to_publish?: string;
+}
+
+let config: Config  = {};
+
+export async function loadConfig(configFile: string = "./shromp.toml"): Promise<void> {
+  try {
+    if (existsSync(configFile)) {
+      let filehandle: FileHandle|undefined = undefined;
+      try {
+        filehandle = await open(configFile, 'r');
+        config = toml.parse(await filehandle.readFile({ encoding: "utf8" }));
+      } finally {
+        await filehandle?.close();
+      }
+    }
+  } catch (e) {
+    console.log("SHROMP: Failed to parse config.", e);
+  }
+}
 
 const DEFAULT_SITE_THEME_PATH = './default-theme/';
 
@@ -7,11 +41,10 @@ const DEFAULT_SITE_THEME_PATH = './default-theme/';
  */
 export default {
   /**
-   * default locale to load the site and to fallback when page doesn't exist
-   * for selected languge.
+   * default locale.
    */
   defaultLocale(): string {
-    return process.env.SHROMP_DEFAULT_LOCALE || "en";
+    return config.default_locale || "en";
   },
 
   /**
@@ -19,42 +52,42 @@ export default {
    * root
    */
   baseUrl(): string {
-    return process.env.SHROMP_BASE_URL || "/";
+    return config.base_url || "/";
   },
 
   /**
    * Documentation version (files will be nested in this folder)
    */
   versionToPublish(): string {
-    return process.env.SHROMP_VERSION_TO_PUBLISH || "1.0.0";
+    return config.version_to_publish || "1.0.0";
   },
 
   /**
    * Folder where the source markdown files are located
    */
   sourceFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_SOURCE_FOLDER || "../docs/", args);
+    return folderPathAssemblyHelper(config.source_folder || "../docs/", args);
   },
 
   /**
    * Folder where generated HTML should be saved
    */
   outputFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_OUTPUT_FOLDER || "../public/", args);
+    return folderPathAssemblyHelper(config.output_folder || "../public/", args);
   },
 
   /**
    * Folder where handlebars templates are stored
    */
   templatesFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_TEMPLATES_FOLDER || path.join(DEFAULT_SITE_THEME_PATH, "templates"), args);
+    return folderPathAssemblyHelper(path.join(config.theme_folder || DEFAULT_SITE_THEME_PATH, "templates"), args);
   },
 
   /**
    * Folder where the site theme styles and scripts are saved
    */
   siteAssetsFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_ASSETS_FOLDER || path.join(DEFAULT_SITE_THEME_PATH, 'assets'), args);
+    return folderPathAssemblyHelper(path.join(config.theme_folder || DEFAULT_SITE_THEME_PATH, 'assets'), args);
   },
 
 
@@ -62,7 +95,7 @@ export default {
    * Default template to use for pages when not set as metadata
    */
   defaultPageTemplate(): string {
-    return process.env.SHROMP_DEFAULT_PAGE_TEMPLATE || "page";
+    return config.default_page_template || "page";
   },
 
   /**
@@ -70,21 +103,21 @@ export default {
    * default: false
    */
   shouldGenerateDocIndex(): boolean {
-    return process.env.SHROMP_GENERATE_DOC_INDEX === "true";
+    return !!config.generate_doc_index;
   },
 
   /**
   * default: true
   */
   isVersioningEnabled(): boolean {
-    return process.env.SHROMP_ENABLE_VERSIONS !== "false";
+    return config.enable_versions === undefined || config.enable_versions;
   },
 
   /**
   * default: true
   */
   areLocalesEnabled(): boolean {
-    return process.env.SHROMP_ENABLE_LOCALES !== "false";
+    return config.enable_locales === undefined || config.enable_locales;
   },
 }
 
