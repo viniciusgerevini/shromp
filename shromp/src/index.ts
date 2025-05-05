@@ -20,8 +20,6 @@ try {
 }
 
 // TODO:
-// - move default site-theme to shromp folder. Rename it to default-theme
-// - change default site-theme config to be shromp-theme. If not present, use default unless config has been changed
 // - make shromp a CLI tool.
 //     - change .env to be a shromp-config.json (or cjson? or toml?)
 //     - index accept args
@@ -30,3 +28,4 @@ try {
 //        - eject (? maybe. Expose shromp files)
 //        - build -- version-to-publish
 // - breadcrumbs example
+// - brand default-theme as shromp

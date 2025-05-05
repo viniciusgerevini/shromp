@@ -1,5 +1,7 @@
 import path from "path";
 
+const DEFAULT_SITE_THEME_PATH = './default-theme/';
+
 /**
  * Generator options
  */
@@ -45,14 +47,14 @@ export default {
    * Folder where handlebars templates are stored
    */
   templatesFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_TEMPLATES_FOLDER || "../site-theme/templates/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_TEMPLATES_FOLDER || path.join(DEFAULT_SITE_THEME_PATH, "templates"), args);
   },
 
   /**
    * Folder where the site theme styles and scripts are saved
    */
   siteAssetsFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(process.env.SHROMP_ASSETS_FOLDER || "../site-theme/assets/", args);
+    return folderPathAssemblyHelper(process.env.SHROMP_ASSETS_FOLDER || path.join(DEFAULT_SITE_THEME_PATH, 'assets'), args);
   },
 
 
