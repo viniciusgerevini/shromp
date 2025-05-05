@@ -1,17 +1,28 @@
-import { describe, it, afterEach } from 'node:test';
+import { describe, it, afterEach, beforeEach, mock, Mock } from 'node:test';
 import * as assert from "node:assert";
-import { DirNode } from './files.ts';
-import { createRequire } from 'node:module';
-import { ContentNode, generateHtmlForTree } from './content-convertion.ts';
+import { DirNode, readFileContent } from './files.ts';
+import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-convertion.ts';
 
-const require = createRequire(import.meta.url);
-const mockFs = require("mock-fs");
+describe('Content conversion', async () => {
+	let readFileContentMock: Mock<typeof readFileContent> = mock.fn();
+	let generateHtmlForTree: typeof generateHtmlForTreeOriginal;
 
-describe('content', () => {
-	afterEach(() => {
-		mockFs.restore();
+	const fileTsNamedExports = await import('./files.ts');
+	let fileTsMock = mock.module("./files.ts", {
+		namedExports: {
+			...fileTsNamedExports,
+			readFileContent: readFileContentMock,
+		},
 	});
 
+	beforeEach(async () => {
+		({ generateHtmlForTree } = await import("./content-convertion.ts"));
+	});
+
+	afterEach(() => {
+		fileTsMock.restore();
+		readFileContentMock.mock.restore();
+	});
 
 	function testNode(content: Partial<ContentNode>): ContentNode {
 		return {
@@ -29,6 +40,15 @@ describe('content', () => {
 		};
 	}
 
+	const mockFileRead = (path: string, fileContent: string) => {
+		readFileContentMock.mock.mockImplementation(async (filePath) => {
+			if (filePath === path) {
+				return fileContent;
+			}
+			throw new Error("Test file read not mocked!");
+		});
+	};
+
 	describe("#generateHtmlForTree", () => {
 		it('returns content transpiled to HTML', async () => {
 			const fileTree: DirNode = {
@@ -42,10 +62,9 @@ describe('content', () => {
 					},
 				]
 			};
+			const fileContent = '# Some File\n with content';
 
-			mockFs({
-				'./docs': { 'somefile.md': '# Some File\n with content' },
-			});
+			mockFileRead("docs/somefile.md", fileContent);
 
 			const expectedContentTree = testNode({
 				title: 'docs',
@@ -74,9 +93,10 @@ describe('content', () => {
 				]
 			};
 
-			mockFs({
-				'./docs': { 'somefile.md': '# Some File\n with content\n## A secondary title\n## Another secondary title' },
-			});
+			mockFileRead(
+				'docs/somefile.md',
+				'# Some File\n with content\n## A secondary title\n## Another secondary title'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'docs',
@@ -107,9 +127,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '# Doc index File\n with content\n## A secondary title\n## Another secondary title' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'# Doc index File\n with content\n## A secondary title\n## Another secondary title'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
@@ -143,9 +164,10 @@ describe('content', () => {
 				]
 			};
 
-			mockFs({
-				'./docs': { 'somefile.md': 'Some file with no heading' },
-			});
+			mockFileRead(
+				'docs/somefile.md',
+				'Some file with no heading'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'docs',
@@ -169,9 +191,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '<!--\npage_title: Banana\n-->\n# Doc index File\n with content' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'<!--\npage_title: Banana\n-->\n# Doc index File\n with content'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Banana',
@@ -195,9 +218,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '<!--\nheadings_nav_max_level: 2\n-->\n# Index File\n with content\n## include \n### do not include' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'<!--\nheadings_nav_max_level: 2\n-->\n# Index File\n with content\n## include \n### do not include'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Index File',
@@ -226,9 +250,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '<!--\ntemplate: test-template\n-->\n# Doc index File\n with content' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'<!--\ntemplate: test-template\n-->\n# Doc index File\n with content'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
@@ -252,9 +277,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '<!--\ndo_not_show_in_nav: true\n-->\n# Doc index File\n with content' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'<!--\ndo_not_show_in_nav: true\n-->\n# Doc index File\n with content'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
@@ -279,9 +305,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '<!--\nsomething_else: value\nthis_should_be_true\n-->\n# Doc index File\n with content' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'<!--\nsomething_else: value\nthis_should_be_true\n-->\n# Doc index File\n with content'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
@@ -306,9 +333,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '# Doc index File\n [another page](../01-page.md) [external link](https://thisisvini.com)' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'# Doc index File\n [another page](../01-page.md) [external link](https://thisisvini.com)'
+			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
@@ -331,9 +359,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '![some image](../../../assets/image.png) ![image 2](/absolute.png)' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'![some image](../../../assets/image.png) ![image 2](/absolute.png)'
+			);
 
 			const expectedContentTree = testNode({
 				title: undefined,
@@ -355,9 +384,10 @@ describe('content', () => {
 				children: []
 			};
 
-			mockFs({
-				'./docs': { 'index.md': '![some image](../assets/image.png?center)' },
-			});
+			mockFileRead(
+				'docs/index.md',
+				'![some image](../assets/image.png?center)'
+			);
 
 			const expectedContentTree = testNode({
 				title: undefined,
@@ -371,5 +401,4 @@ describe('content', () => {
 			assert.deepEqual(contentTree, expectedContentTree);
 		});
 	});
-
 });

@@ -5,7 +5,7 @@
   "description": "Docs for Godot's Aseprite Wizard plugin",
   "main": "index.js",
   "scripts": {
-    "test": "node --import tsx --test --enable-source-maps --test-reporter node-test-reporter",
+    "test": "node --import tsx --test --enable-source-maps --experimental-test-module-mocks --test-reporter node-test-reporter",
     "build": "node --import tsx -r dotenv/config src/index.ts"
   },
   "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
