@@ -1,7 +1,7 @@
 import { describe, it, afterEach, beforeEach, mock, Mock } from 'node:test';
 import * as assert from "node:assert";
 import { DirNode, readFileContent } from './files.ts';
-import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-convertion.ts';
+import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-conversion.ts';
 
 describe('Content conversion', async () => {
 	let readFileContentMock: Mock<typeof readFileContent> = mock.fn();
@@ -16,7 +16,7 @@ describe('Content conversion', async () => {
 	});
 
 	beforeEach(async () => {
-		({ generateHtmlForTree } = await import("./content-convertion.ts"));
+		({ generateHtmlForTree } = await import("./content-conversion.ts"));
 	});
 
 	afterEach(() => {

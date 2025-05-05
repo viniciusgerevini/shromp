@@ -1,4 +1,4 @@
-import { generateHtmlForTree } from './content-convertion.ts';
+import { generateHtmlForTree } from './content-conversion.ts';
 import { getFileTree } from './files.ts';
 import { copyImages, createSiteFromContent } from './build-files.ts';
 

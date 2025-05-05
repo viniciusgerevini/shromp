@@ -19,6 +19,7 @@
     "tsx": "^4.19.3"
   },
   "devDependencies": {
+    "@types/mock-fs": "^4.13.4",
     "@types/node": "^22.15.3",
     "mock-fs": "^5.5.0",
     "node-test-reporter": "^1.1.0"

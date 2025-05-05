@@ -28,9 +28,12 @@ export async function loadConfig(configFile: string = "./shromp.toml"): Promise<
       } finally {
         await filehandle?.close();
       }
+    } else {
+      config = {};
     }
   } catch (e) {
     console.log("SHROMP: Failed to parse config.", e);
+    throw e;
   }
 }
 

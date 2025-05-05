@@ -1,10 +1,8 @@
 import { describe, it, afterEach } from 'node:test';
 import * as assert from "node:assert";
-import { copyTo, createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, readFileContent } from './files.ts';
-import { createRequire } from 'node:module';
+import { createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, readFileContent } from './files.ts';
 
-const require = createRequire(import.meta.url);
-const mockFs = require("mock-fs");
+import mockFs from "mock-fs";
 
 describe('files', () => {
 	afterEach(() => {
