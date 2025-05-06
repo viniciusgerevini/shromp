@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import { build } from './commands.ts';
+import { build, init } from './commands.ts';
 import { fileExists } from './files.ts';
 
 program
@@ -10,9 +10,13 @@ program
 program
 	.command("init")
 	.description("Initialize a shromp project with boilerplate files.")
-	.action(() => {
-		console.log("INIIIIT");
-		//TODO: init (generate files shromp config, shromp-theme, docs folder with samples)
+	.option("-d, --directory <path>", "target directory")
+	.action(async (options) => {
+		try {
+			await init(options.directory);
+		} catch (e: any) {
+			program.error(e.message);
+		}
 	});
 
 program

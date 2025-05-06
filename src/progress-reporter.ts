@@ -33,3 +33,11 @@ export function error(): void {
 export function updateCurrent(text: string): void {
 	spinner.text = text;
 }
+
+export function logShrimplySuccess(text: string): void {
+	console.log(`\n🦐🦐🦐🦐 ${text} 🦐🦐🦐🦐\n`);
+}
+
+export function log(text: string): void {
+	console.log(text);
+}

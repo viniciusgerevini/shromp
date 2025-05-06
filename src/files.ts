@@ -93,7 +93,7 @@ export async function readFileContent(filePath: string): Promise<string> {
 	} 
 }
 
-async function createFolderIfRequired(folderPath: string): Promise<void> {
+export async function createFolderIfRequired(folderPath: string): Promise<void> {
 	await mkdir(folderPath, { recursive: true });
 }
 
