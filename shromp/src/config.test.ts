@@ -1,8 +1,8 @@
 import { describe, it, afterEach } from 'node:test';
 import * as assert from 'node:assert';
 import mockFs from 'mock-fs';
-import config, { loadConfig } from './config';
-import { pathRelativeToProcess } from './files';
+import config, { loadConfig } from './config.ts';
+import { pathRelativeToProcess } from './files.ts';
 
 
 describe('config', () => {
@@ -73,7 +73,7 @@ default_locale="shromp-locale"
 	});
 
 	it('uses right defaults', async () => {
-		// making sure config is clean, given file does not exist
+		// making sure config is clean by providing a file that does not exist
 		await loadConfig("./some-file");
 
 		assert.equal(config.baseUrl(), '/');
@@ -90,7 +90,7 @@ default_locale="shromp-locale"
 	});
 
 	it('joins paths correctly for path configs', async () => {
-		// making sure config is clean, given file does not exist
+		// making sure config is clean by providing a file that does not exist
 		await loadConfig("./some-file");
 		
 		assert.equal(

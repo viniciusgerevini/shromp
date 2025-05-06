@@ -1,9 +1,8 @@
+import { copyImages, createSiteFromContent } from './build-files.ts';
+import config, { loadConfig } from "./config.ts";
 import { generateHtmlForTree } from './content-conversion.ts';
 import { getFileTree } from './files.ts';
-import { copyImages, createSiteFromContent } from './build-files.ts';
 import * as progressReporter from './progress-reporter.ts';
-
-import config, { loadConfig } from "./config.ts";
 
 export async function build(configFile?: string): Promise<void> {
 	await loadConfig(configFile);

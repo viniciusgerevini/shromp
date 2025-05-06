@@ -3,7 +3,6 @@ import * as assert from "node:assert";
 import { createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, pathRelativeToProcess, readFileContent } from './files.ts';
 
 import mockFs from "mock-fs";
-import path from 'node:path';
 
 describe('files', () => {
 	afterEach(() => {

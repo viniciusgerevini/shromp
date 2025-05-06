@@ -43,7 +43,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			template: undefined,
 		};
 		if (sourceNode.hasIndex) {
-			const indexNode = await generateContentForFile(pathRelativeToProcess(sourceNode.path, "index.md"));
+			const indexNode = await convertFileContent(pathRelativeToProcess(sourceNode.path, "index.md"));
 			dirContentNode.title = indexNode.title!;
 			dirContentNode.htmlContent = indexNode.htmlContent;
 			dirContentNode.anchors = indexNode.anchors;
@@ -58,7 +58,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 		return dirContentNode;
 	}
 
-	const contentNode = await generateContentForFile(pathRelativeToProcess(sourceNode.path));
+	const contentNode = await convertFileContent(pathRelativeToProcess(sourceNode.path));
 
 	return {
 		...contentNode,
@@ -78,7 +78,7 @@ interface ContentForFileResult {
 	metadata: ContentMetadata["keys"];
 }
 
-async function generateContentForFile(filePath: string): Promise<ContentForFileResult> {
+async function convertFileContent(filePath: string): Promise<ContentForFileResult> {
 	const content = await readFileContent(filePath);
 
 	let headingAnchorsMaxLevel = 3;
@@ -169,8 +169,6 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 	}
 }
 
-// FIXME: this is a bit coupled with the step to read files on files.ts
-// Keeping it here for now, but it probably needs more thought
 function transformLinkToTarget(link: string): string {
 	return link.replaceAll(/\/[0-9]+\-/g, '/').replace(".md", ".html");
 }
