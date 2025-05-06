@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["**/*.test.*", "**/*.spec.*", "**/__mocks__/*", "**/__tests__/*", "node_modules"],
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "esnext",
+    "outDir": "dist",
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": false
+  }
+}

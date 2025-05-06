@@ -1,14 +1,14 @@
 import { describe, it, afterEach, beforeEach, mock, Mock } from 'node:test';
 import * as assert from "node:assert";
-import { DirNode, readFileContent } from './files.ts';
-import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-conversion.ts';
+import { DirNode, pathRelativeToProcess, readFileContent } from './files';
+import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-conversion';
 
 describe('Content conversion', async () => {
 	let readFileContentMock: Mock<typeof readFileContent> = mock.fn();
 	let generateHtmlForTree: typeof generateHtmlForTreeOriginal;
 
-	const fileTsNamedExports = await import('./files.ts');
-	let fileTsMock = mock.module("./files.ts", {
+	const fileTsNamedExports = await import('./files');
+	let fileTsMock = mock.module("./files", {
 		namedExports: {
 			...fileTsNamedExports,
 			readFileContent: readFileContentMock,
@@ -16,7 +16,7 @@ describe('Content conversion', async () => {
 	});
 
 	beforeEach(async () => {
-		({ generateHtmlForTree } = await import("./content-conversion.ts"));
+		({ generateHtmlForTree } = await import("./content-conversion"));
 	});
 
 	afterEach(() => {
@@ -42,7 +42,7 @@ describe('Content conversion', async () => {
 
 	const mockFileRead = (path: string, fileContent: string) => {
 		readFileContentMock.mock.mockImplementation(async (filePath) => {
-			if (filePath === path) {
+			if (filePath === pathRelativeToProcess(path)) {
 				return fileContent;
 			}
 			throw new Error("Test file read not mocked!");

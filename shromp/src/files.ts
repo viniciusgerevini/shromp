@@ -36,12 +36,12 @@ interface GetFileTreeOptions {
 export async function getFileTree(dirPath: string, options: GetFileTreeOptions = {}): Promise<DirNode> {
 	const thisDir: DirNode = {
 		name: sanitizeName(path.basename(dirPath)),
-		path: dirPath,
+		path: pathRelativeToProcess(dirPath),
 		children: [],
 		hasIndex: false,
 	};
 
-	const files = await readdir(dirPath, { withFileTypes: true });
+	const files = await readdir(pathRelativeToProcess(dirPath), { withFileTypes: true });
 
 	for (const file of files) {
 		if (file.isDirectory()) {
@@ -115,5 +115,14 @@ export function generateHashForContent(content: string, length: number = 5): str
 }
 
 export function fileExists(filePath: string): boolean {
-	return existsSync(filePath);
+	return existsSync(pathRelativeToProcess(filePath));
+}
+
+export function pathRelativeToProcess(filePath: string, ...args: string[]): string {
+	const cwd = path.isAbsolute(filePath) ? "" : process.cwd();
+
+	if (args.length) {
+		return path.join(cwd,filePath, ...args);
+	}
+	return path.join(cwd, filePath);
 }

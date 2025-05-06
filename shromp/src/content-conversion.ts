@@ -1,15 +1,11 @@
-/**
- * Module responsible for converting files from markdown to HTML.
- */
-import path from "node:path";
+/** Module responsible for converting files from markdown to HTML. */
 import { Marked } from 'marked';
 import { gfmHeadingId, getHeadingList } from "marked-gfm-heading-id";
 import extendedTables from "marked-extended-tables";
 
-import { DirNode, FileNode, isDirNode, readFileContent } from "./files.ts";
+import { DirNode, FileNode, isDirNode, pathRelativeToProcess, readFileContent } from "./files.ts";
 
-export interface ContentNode {
-	title: string;
+export interface ContentNode { title: string;
 	pathSection: string;
 	htmlContent: string | null;
 	anchors: ContentAnchor[];
@@ -47,7 +43,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			template: undefined,
 		};
 		if (sourceNode.hasIndex) {
-			const indexNode = await generateContentForFile(path.join(sourceNode.path, "index.md"));
+			const indexNode = await generateContentForFile(pathRelativeToProcess(sourceNode.path, "index.md"));
 			dirContentNode.title = indexNode.title!;
 			dirContentNode.htmlContent = indexNode.htmlContent;
 			dirContentNode.anchors = indexNode.anchors;
@@ -62,7 +58,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 		return dirContentNode;
 	}
 
-	const contentNode = await generateContentForFile(sourceNode.path);
+	const contentNode = await generateContentForFile(pathRelativeToProcess(sourceNode.path));
 
 	return {
 		...contentNode,
@@ -119,7 +115,6 @@ async function generateContentForFile(filePath: string): Promise<ContentForFileR
 
 			return markdown;
 		}
-
 	}});
 
 	mkd.use(gfmHeadingId({ prefix: "aid-" }));

@@ -1,8 +1,9 @@
 import { describe, it, afterEach } from 'node:test';
 import * as assert from "node:assert";
-import { createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, readFileContent } from './files.ts';
+import { createFile, DirNode, generateHashForContent, getFileTree, listFilesInDir, pathRelativeToProcess, readFileContent } from './files.ts';
 
 import mockFs from "mock-fs";
+import path from 'node:path';
 
 describe('files', () => {
 	afterEach(() => {
@@ -27,21 +28,21 @@ describe('files', () => {
 
 			const expectedTree: DirNode = {
 				name: 'docs',
-				path: './docs',
+				path: pathRelativeToProcess('./docs'),
 				hasIndex: false,
 				children: [
 					{
 						name: 'en',
-						path: 'docs/en',
+						path: pathRelativeToProcess('docs/en'),
 						hasIndex: false,
 						children: [
 							{
 								name: 'somefile',
-								path: 'docs/en/somefile.md',
+								path: pathRelativeToProcess('docs/en/somefile.md'),
 							},
 							{
 								name: 'somefolder',
-								path: 'docs/en/somefolder',
+								path: pathRelativeToProcess('docs/en/somefolder'),
 								hasIndex: true,
 								children: [],
 							},
@@ -49,7 +50,7 @@ describe('files', () => {
 					},
 					{
 						name: 'fr',
-						path: 'docs/fr',
+						path: pathRelativeToProcess('docs/fr'),
 						children: [],
 						hasIndex: false,
 					}
@@ -76,21 +77,21 @@ describe('files', () => {
 
 			const expectedTree = {
 				name: 'docs',
-				path: './docs',
+				path: pathRelativeToProcess('./docs'),
 				hasIndex: false,
 				children: [
 					{
 						name: 'en',
-						path: 'docs/1-en',
+						path: pathRelativeToProcess('docs/1-en'),
 						hasIndex: false,
 						children: [
 							{
 								name: 'somefile',
-								path: 'docs/1-en/1-somefile.md',
+								path: pathRelativeToProcess('docs/1-en/1-somefile.md'),
 							},
 							{
 								name: 'somefolder',
-								path: 'docs/1-en/2-somefolder',
+								path: pathRelativeToProcess('docs/1-en/2-somefolder'),
 								hasIndex: true,
 								children: [],
 							},
@@ -98,7 +99,7 @@ describe('files', () => {
 					},
 					{
 						name: 'fr',
-						path: 'docs/20-fr',
+						path: pathRelativeToProcess('docs/20-fr'),
 						hasIndex: false,
 						children: [],
 					}
@@ -122,16 +123,16 @@ describe('files', () => {
 
 			const expectedTree = {
 				name: 'docs',
-				path: './docs',
+				path: pathRelativeToProcess('./docs'),
 				hasIndex: false,
 				children: [
 					{
 						name: 'somefile',
-						path: 'docs/1-somefile.md',
+						path: pathRelativeToProcess('docs/1-somefile.md'),
 					},
 					{
 						name: 'someotherfile',
-						path: 'docs/someotherfile.md',
+						path: pathRelativeToProcess('docs/someotherfile.md'),
 					},
 				]
 			};
@@ -171,17 +172,17 @@ describe('files', () => {
 
 			const expectedTree = {
 				name: 'docs',
-				path: './docs',
+				path: pathRelativeToProcess('./docs'),
 				hasIndex: false,
 				children: [
 					{
 						name: 'en',
-						path: 'docs/en',
+						path: pathRelativeToProcess('docs/en'),
 						hasIndex: false,
 						children: [
 							{
 								name: 'somefile',
-								path: 'docs/en/somefile.md',
+								path: pathRelativeToProcess('docs/en/somefile.md'),
 							},
 						],
 					},

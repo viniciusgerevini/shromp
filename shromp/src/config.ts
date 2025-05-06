@@ -18,22 +18,19 @@ interface Config {
 
 let config: Config  = {};
 
-export async function loadConfig(configFile: string = "./shromp.toml"): Promise<void> {
-  try {
-    if (existsSync(configFile)) {
-      let filehandle: FileHandle|undefined = undefined;
-      try {
-        filehandle = await open(configFile, 'r');
-        config = toml.parse(await filehandle.readFile({ encoding: "utf8" }));
-      } finally {
-        await filehandle?.close();
-      }
-    } else {
-      config = {};
+export async function loadConfig(configFile: string = "shromp.toml"): Promise<void> {
+  const pathToConfig = folderPathAssemblyHelper(configFile);
+
+  if (existsSync(pathToConfig)) {
+    let filehandle: FileHandle|undefined = undefined;
+    try {
+      filehandle = await open(pathToConfig, 'r');
+      config = toml.parse(await filehandle.readFile({ encoding: "utf8" }));
+    } finally {
+      await filehandle?.close();
     }
-  } catch (e) {
-    console.log("SHROMP: Failed to parse config.", e);
-    throw e;
+  } else {
+    config = {};
   }
 }
 
@@ -124,9 +121,11 @@ export default {
   },
 }
 
-function folderPathAssemblyHelper(folder: string, args: string[]) {
+function folderPathAssemblyHelper(folder: string, args: string[] = []) {
+  const cwd = path.isAbsolute(folder) ? "" : process.cwd();
+
   if (args.length) {
-    return path.join(folder, ...args);
+    return path.join(cwd,folder, ...args);
   }
-  return folder;
+  return path.join(cwd, folder);
 }

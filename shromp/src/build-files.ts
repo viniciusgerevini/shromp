@@ -1,12 +1,13 @@
 /**
  * Module responsible for generating the target files.
  */
+import path from "node:path";
 import { ContentAnchor, ContentNode } from "./content-conversion.ts";
 import config from "./config.ts";
-import { copyTo, createFile, listFilesInDir } from "./files.ts";
-import Templates from "./templates.ts";
+import { copyTo, createFile, fileExists, listFilesInDir } from "./files.ts";
+import Templates, { TemplatesInstance } from "./templates.ts";
 import { compileSiteAssets, SiteAssets } from "./assets.ts";
-import path from "node:path";
+import * as progressReporter from './progress-reporter.ts';
 
 interface ContentData {
 	title: string;
@@ -33,8 +34,6 @@ export function isNavigationLinksForLocale(node: NavigationLink | NavigationLink
 
 type NavigationLinksForLocale = {[locale: string]: NavigationLink };
 
-const templates = await Templates();
-
 export async function createSiteFromContent(content: ContentNode): Promise<void> {
 	const contentCache: ContentCache = {};
 
@@ -44,24 +43,29 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 	const assets = await compileSiteAssets();
 
+	const templates = await Templates();
+
 	if (content.isIndex) {
-		await createDocIndexPage(content, assets);
+		await createDocIndexPage(content, assets, templates);
 	}
 
-	await createPages(contentCache, navigationLinks, assets);
+	await createPages(contentCache, navigationLinks, assets, templates);
 
 	if (config.isVersioningEnabled()) {
 		await updateVersionsFiles(isNavigationLinksForLocale(navigationLinks) ? navigationLinks : "/");
 	}
 }
 
-async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Promise<void> {
+async function createDocIndexPage(content: ContentNode, assets: SiteAssets, templates: TemplatesInstance): Promise<void> {
 	if (!config.shouldGenerateDocIndex()) {
-		console.log("Doc index is present, but configured to skip generation.");
+		progressReporter.start('There is an index present for the root folder, but shromp is configured to skip generation.')
+		progressReporter.warning();
 		return;
 	}
 	const indexPath = path.join("/", "index.html");
-	console.log("Creating docs index");
+
+	progressReporter.start("Creating root index");
+
 	await createPage(indexPath, {
 		template: content.template,
 		pageTitle: content.title,
@@ -71,7 +75,9 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets): Pro
 		locale: config.defaultLocale(),
 		version: config.isVersioningEnabled() ? config.versionToPublish() : undefined,
 		assets,
-	});
+	}, templates);
+
+	progressReporter.success();
 }
 
 function createNavigationTreeForLocale(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
@@ -201,10 +207,11 @@ async function createPages(
 	contentCache: ContentCache,
 	navigationLinks: NavigationLinksForLocale | NavigationLink,
 	assets: SiteAssets,
+	templates: TemplatesInstance,
 ): Promise<void> {
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
-		console.log("Generating page ", filePath);
+		progressReporter.start(`Generating page ${filePath}`);
 
 		await createPage(filePath, {
 			template: content.template,
@@ -217,17 +224,21 @@ async function createPages(
 			childLinks: content.childLinks,
 			metadata: content.metadata,
 			assets,
-		});
+		}, templates);
+		progressReporter.success();
 	}
 }
 
-async function createPage(filePath: string, content: any): Promise<void> {
+async function createPage(filePath: string, content: any, templates: TemplatesInstance): Promise<void> {
 	const template = await templates.getTemplate(content.template || config.defaultPageTemplate());
 	const pageContent = template(content);
 	await createFile(config.outputFolder(filePath), pageContent);
 }
 
 export async function copyImages(): Promise<void> {
+	if (!fileExists(config.sourceFolder("assets", "images"))) {
+		return;
+	}
 	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
 }
 
@@ -236,9 +247,11 @@ async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLo
 
 	const versionsFilePath = config.outputFolder("versions.json");
 
-	console.log(`Creating versions file ${versionsFilePath}`)
+	progressReporter.start(`Creating versions file ${versionsFilePath}`);
 
 	await createFile(versionsFilePath, JSON.stringify({ versions }));
+
+	progressReporter.success();
 }
 
 async function getAllVersions(root: NavigationLinksForLocale | string): Promise<string[]> {

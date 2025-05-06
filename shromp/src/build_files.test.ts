@@ -1,15 +1,7 @@
-import { describe, it, afterEach } from 'node:test';
+import { describe, it } from 'node:test';
 // import * as assert from "node:assert";
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-// const mockFs = require("mock-fs");
 
 describe("Build Target files", () => {
-	afterEach(() => {
-	// 	mockFs.restore();
-	});
-
 	it.todo("creates navigation tree with all content");
 	it.todo("generates assets with hashed name");
 

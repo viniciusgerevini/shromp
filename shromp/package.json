@@ -1,27 +1,34 @@
 {
-  "name": "aseprite-wizard-docs",
+  "name": "shromp",
   "version": "1.0.0",
   "type": "module",
-  "description": "Docs for Godot's Aseprite Wizard plugin",
+  "description": "A chill doc and static website generator",
   "main": "index.js",
   "scripts": {
-    "test": "node --import tsx --test --enable-source-maps --experimental-test-module-mocks --test-reporter node-test-reporter",
-    "build": "node --import tsx src/index.ts"
+    "test": "node --import tsx --test --enable-source-maps --experimental-test-module-mocks --test-reporter node-test-reporter '!(dist)/**/*.test.ts'",
+    "shromp": "node --import tsx src/index.ts",
+    "build-cli": "tsc -p ./tsconfig-cli-build.json"
+  },
+  "bin": {
+    "shromp": "./dist/index.js"
   },
   "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "commander": "^13.1.0",
     "handlebars": "^4.7.8",
     "marked": "^15.0.11",
     "marked-extended-tables": "^2.0.1",
     "marked-gfm-heading-id": "^4.1.1",
     "toml": "^3.0.0",
-    "tsx": "^4.19.3"
+    "yocto-spinner": "^0.2.2"
   },
   "devDependencies": {
     "@types/mock-fs": "^4.13.4",
     "@types/node": "^22.15.3",
     "mock-fs": "^5.5.0",
-    "node-test-reporter": "^1.1.0"
+    "node-test-reporter": "^1.1.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
   }
 }

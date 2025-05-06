@@ -3,7 +3,8 @@
  */
 import path from "node:path";
 import config from "./config.ts";
-import { createFile, generateHashForContent, listFilesInDir, readFileContent } from "./files.ts";
+import { createFile, fileExists, generateHashForContent, listFilesInDir, readFileContent } from "./files.ts";
+import * as progressReporter from './progress-reporter.ts';
 
 type AssetFolder = "styles" | "scripts";
 
@@ -13,7 +14,6 @@ export interface SiteAssets {
 }
 
 export async function compileSiteAssets(): Promise<SiteAssets> {
-	console.log("Compiling assets");
 	// NOTE: The only thing being done at the moment is generating a hash to append to the file name
 	// to prevents issues with caching.
 	// Some people might feel the urge to implement minification and some other optimisations. That
@@ -25,6 +25,10 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 }
 
 async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<string[]> {
+	if (!fileExists(config.siteAssetsFolder(assetFolder))) {
+		return [];
+	}
+
 	const files = await listFilesInDir(config.siteAssetsFolder(assetFolder));
 
 	return Promise.all(files.map(async (file: string) => {
@@ -33,6 +37,7 @@ async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<str
 }
 
 async function createTargetFileWithHash(file: string, assetFolder: AssetFolder ): Promise<string> {
+	progressReporter.start("Compiling theme asset");
 	const content = await readFileContent(config.siteAssetsFolder(assetFolder, file));
 	const hash = generateHashForContent(content);
 	const ext = path.extname(file);
@@ -41,6 +46,6 @@ async function createTargetFileWithHash(file: string, assetFolder: AssetFolder )
 	const targetPath = config.outputFolder("assets", assetFolder, targetName);
 	await createFile(targetPath, content);
 	const fileUrl = `${config.baseUrl()}assets/${assetFolder}/${targetName}`;
-	console.log(`Asset file created ${fileUrl}`);
+	progressReporter.success(`Asset file created ${fileUrl}`);
 	return fileUrl;
 }

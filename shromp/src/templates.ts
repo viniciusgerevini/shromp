@@ -4,11 +4,16 @@
 import path from "path";
 import Handlebars from "handlebars";
 
+import * as progressReporter from './progress-reporter.ts';
 import config from "./config.ts";
 import { fileExists, listFilesInDir, readFileContent } from "./files.ts";
 
-export default async function templates() {
-  await registerHelpers();
+export interface TemplatesInstance {
+	getTemplate(templateName: string): Promise<HandlebarsTemplateDelegate>;
+}
+
+export default async function templates(): Promise<TemplatesInstance> {
+	await registerHelpers();
 	await loadPartials();
 
 	const templates: {[templateName: string]: HandlebarsTemplateDelegate} = {};
@@ -24,7 +29,12 @@ export default async function templates() {
 }
 
 async function loadPartials() {
-	const files = await listFilesInDir(config.templatesFolder("partials"));
+	const partialsFolder = config.templatesFolder("partials");
+
+	if (!fileExists(partialsFolder)) {
+		return;
+	}
+	const files = await listFilesInDir(partialsFolder);
 
 	for (let file of files) {
 		if (path.extname(file) !== ".hbs") {
@@ -43,12 +53,13 @@ async function registerHelpers() {
 		return;
 	}
 
-	const helpers = await import("../" + helperImportPath);
+	const helpers = await import(helperImportPath);
 
 	for (let key in helpers) {
 		if (typeof helpers[key] === "function") {
-			console.log("Registering template helper:", key);
+			progressReporter.start(`Registering template helper: ${key}`);
 			Handlebars.registerHelper(key, helpers[key]);
+			progressReporter.success();
 		}
 	}
 }
