@@ -1,11 +1,26 @@
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { program } from 'commander';
 import { build, init } from './commands.ts';
-import { fileExists } from './files.ts';
+import { fileExists, readFileContent } from './files.ts';
+
+async function getPackageVersion(): Promise<string> {
+	try {
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		const version =  JSON.parse(
+			await readFileContent(path.resolve(__dirname, "../package.json"))
+		).version;
+
+		return version;
+	} catch (e) {
+		return "";
+	}
+}
 
 program
 	.name("shromp")
 	.description("A chill docs/static site generator")
-	.version("0.0.1"); // TODO check how to define this based on package.json
+	.version(await getPackageVersion());
 
 program
 	.command("init")
