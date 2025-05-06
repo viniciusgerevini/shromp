@@ -77,8 +77,8 @@ default_locale="shromp-locale"
 		await loadConfig("./some-file");
 
 		assert.equal(config.baseUrl(), '/');
-		assert.equal(config.sourceFolder(), pathRelativeToProcess('../docs/'));
-		assert.equal(config.outputFolder(), pathRelativeToProcess('../public/'));
+		assert.equal(config.sourceFolder(), pathRelativeToProcess('./docs/'));
+		assert.equal(config.outputFolder(), pathRelativeToProcess('./public/'));
 		assert.equal(config.templatesFolder(), pathRelativeToProcess('default-theme/templates'));
 		assert.equal(config.siteAssetsFolder(), pathRelativeToProcess('default-theme/assets'));
 		assert.equal(config.defaultPageTemplate(), 'page');

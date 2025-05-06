@@ -66,14 +66,14 @@ export default {
    * Folder where the source markdown files are located
    */
   sourceFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(config.source_folder || "../docs/", args);
+    return folderPathAssemblyHelper(config.source_folder || "./docs/", args);
   },
 
   /**
    * Folder where generated HTML should be saved
    */
   outputFolder(...args: string[]): string {
-    return folderPathAssemblyHelper(config.output_folder || "../public/", args);
+    return folderPathAssemblyHelper(config.output_folder || "./public/", args);
   },
 
   /**

@@ -2,10 +2,10 @@
 base_url="/"
 
 # Folder where the source markdown files are located
-source_folder="../docs/"
+source_folder="./docs/"
 
 # Folder where the generated HTML files should be saved
-output_folder="../public/"
+output_folder="./public/"
 
 # Folder where site theme handlebars templates are located
 theme_folder="./default-theme/"
