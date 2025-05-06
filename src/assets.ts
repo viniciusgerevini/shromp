@@ -4,7 +4,7 @@
 import path from "node:path";
 import config from "./config.ts";
 import { createFile, fileExists, generateHashForContent, listFilesInDir, readFileContent } from "./files.ts";
-import * as progressReporter from './progress-reporter.ts';
+import * as logs from "./logs.ts";
 
 type AssetFolder = "styles" | "scripts";
 
@@ -18,6 +18,8 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 	// to prevents issues with caching.
 	// Some people might feel the urge to implement minification and some other optimisations. That
 	// should happen in this file, ideally exposed vai a hook.
+	logs.start("Compiling theme asset");
+
 	return {
 		styles: await createTargetAssetsWithHash("styles"),
 		scripts: await createTargetAssetsWithHash("scripts"),
@@ -37,7 +39,6 @@ async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<str
 }
 
 async function createTargetFileWithHash(file: string, assetFolder: AssetFolder ): Promise<string> {
-	progressReporter.start("Compiling theme asset");
 	const content = await readFileContent(config.siteAssetsFolder(assetFolder, file));
 	const hash = generateHashForContent(content);
 	const ext = path.extname(file);
@@ -46,6 +47,6 @@ async function createTargetFileWithHash(file: string, assetFolder: AssetFolder )
 	const targetPath = config.outputFolder("assets", assetFolder, targetName);
 	await createFile(targetPath, content);
 	const fileUrl = `${config.baseUrl()}assets/${assetFolder}/${targetName}`;
-	progressReporter.success(`Asset file created ${fileUrl}`);
+	logs.success(`Asset file created ${fileUrl}`);
 	return fileUrl;
 }

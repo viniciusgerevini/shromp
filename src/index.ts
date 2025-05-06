@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import { program } from 'commander';
 import { build, init } from './commands.ts';
 import { fileExists, readFileContent } from './files.ts';
+import * as logs from "./logs.ts";
 
 async function getPackageVersion(): Promise<string> {
 	try {
@@ -19,7 +20,7 @@ async function getPackageVersion(): Promise<string> {
 
 program
 	.name("shromp")
-	.description("A chill docs/static site generator")
+	.description("A chill static docs/site generator")
 	.version(await getPackageVersion());
 
 program
@@ -38,14 +39,17 @@ program
 	.command("build")
 	.description("build files")
 	.option("-c, --config <path to shromp.toml>", "shromp config file")
+	.option("-v, --version <string>", "Overrides version_to_publish property from shromp.toml")
  	.action(async (options) => {
 		if (options.config && !fileExists(options.config)) {
-			program.error(`Error: Config file ${options.config} does not exist`);
+			logs.error(`Config file ${options.config} does not exist`);
+			program.error("");
 		}
 		try {
 			await build(options.config);
 		} catch(e: any) {
-			program.error(e.message);
+			logs.error(e.message);
+			program.error("");
 		}
 	});
 

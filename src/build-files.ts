@@ -7,7 +7,7 @@ import config from "./config.ts";
 import { copyTo, createFile, fileExists, listFilesInDir } from "./files.ts";
 import Templates, { TemplatesInstance } from "./templates.ts";
 import { compileSiteAssets, SiteAssets } from "./assets.ts";
-import * as progressReporter from './progress-reporter.ts';
+import * as logs from "./logs.ts";
 
 interface ContentData {
 	title: string;
@@ -49,6 +49,8 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 		await createDocIndexPage(content, assets, templates);
 	}
 
+	logs.start("Creating pages");
+
 	await createPages(contentCache, navigationLinks, assets, templates);
 
 	if (config.isVersioningEnabled()) {
@@ -58,13 +60,12 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 async function createDocIndexPage(content: ContentNode, assets: SiteAssets, templates: TemplatesInstance): Promise<void> {
 	if (!config.shouldGenerateDocIndex()) {
-		progressReporter.start('There is an index present for the root folder, but shromp is configured to skip generation.')
-		progressReporter.warning();
+		logs.warn('There is an index present for the root folder, but shromp is configured to skip generation.')
 		return;
 	}
 	const indexPath = path.join("/", "index.html");
 
-	progressReporter.start("Creating root index");
+	logs.start("Creating root index");
 
 	await createPage(indexPath, {
 		template: content.template,
@@ -77,7 +78,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets, temp
 		assets,
 	}, templates);
 
-	progressReporter.success();
+	logs.success("Root index created");
 }
 
 function createNavigationTreeForLocale(content: ContentNode, contentCache: ContentCache): NavigationLinksForLocale {
@@ -211,8 +212,6 @@ async function createPages(
 ): Promise<void> {
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
-		progressReporter.start(`Generating page ${filePath}`);
-
 		await createPage(filePath, {
 			template: content.template,
 			pageTitle: content.title,
@@ -225,7 +224,7 @@ async function createPages(
 			metadata: content.metadata,
 			assets,
 		}, templates);
-		progressReporter.success();
+		logs.success(`Page created ${filePath}`);
 	}
 }
 
@@ -247,11 +246,11 @@ async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLo
 
 	const versionsFilePath = config.outputFolder("versions.json");
 
-	progressReporter.start(`Creating versions file ${versionsFilePath}`);
+	logs.start(`Creating versions file ${versionsFilePath}`);
 
 	await createFile(versionsFilePath, JSON.stringify({ versions }));
 
-	progressReporter.success();
+	logs.success("Versions file created");
 }
 
 async function getAllVersions(root: NavigationLinksForLocale | string): Promise<string[]> {

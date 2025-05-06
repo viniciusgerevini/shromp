@@ -4,7 +4,7 @@
 import path from "path";
 import Handlebars from "handlebars";
 
-import * as progressReporter from './progress-reporter.ts';
+import * as logs from "./logs.ts";
 import config from "./config.ts";
 import { fileExists, listFilesInDir, readFileContent } from "./files.ts";
 
@@ -55,11 +55,11 @@ async function registerHelpers() {
 
 	const helpers = await import(helperImportPath);
 
+	logs.start(`Registering template helpers`);
 	for (let key in helpers) {
 		if (typeof helpers[key] === "function") {
-			progressReporter.start(`Registering template helper: ${key}`);
 			Handlebars.registerHelper(key, helpers[key]);
-			progressReporter.success();
+			logs.success(`Template helper registered: ${key}`);
 		}
 	}
 }
