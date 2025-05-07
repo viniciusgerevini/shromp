@@ -17,7 +17,6 @@ base_url="/shromp"
 source_folder="../shromp-source/"
 output_folder="../shromp-public/"
 theme_folder="./shromp-theme/"
-default_page_template="shromp-template"
 generate_doc_index=true
 enable_versions=false
 version_to_publish="shromp-version"
@@ -34,13 +33,31 @@ default_locale="shromp-locale"
 			assert.equal(config.outputFolder(), pathRelativeToProcess('../shromp-public/'));
 			assert.equal(config.templatesFolder(), pathRelativeToProcess('shromp-theme/templates'));
 			assert.equal(config.themeAssetsFolder(), pathRelativeToProcess('shromp-theme/assets'));
-			assert.equal(config.defaultPageTemplate(), 'shromp-template');
 			assert.equal(config.shouldGenerateDocIndex(), true);
 			assert.equal(config.isVersioningEnabled(), false);
 			assert.equal(config.areLocalesEnabled(), false);
 			assert.equal(config.versionToPublish(), 'shromp-version');
 			assert.equal(config.defaultLocale(), 'shromp-locale');
 		});
+
+		it('loads config from template config file', async () => {
+			const shrompConfig =`
+theme_folder="./shromp-theme/"
+`;
+			const shrompThemeConfig =`
+default_template="banana"
+`;
+
+			mockFs({
+				'./custom/shromp.toml': shrompConfig,
+				'./shromp-theme/shromp-theme.toml': shrompThemeConfig,
+			});
+
+			await loadConfig('./custom/shromp.toml');
+
+			assert.equal(config.defaultPageTemplate(), 'banana');
+		});
+
 
 		it('loads shromp.toml by default', async () => {
 			mockFs({ './shromp.toml': 'base_url="/defo-from-shromp"' });
