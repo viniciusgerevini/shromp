@@ -39,3 +39,7 @@ export function getNavClassWhenCurrent(navLink, currentFile) {
 export function createRedirectionLink(locale, version) {
 	return [locale, version].join("/");
 }
+
+export function assetImage(imageName, defaultPath) {
+	return this.assets.images[imageName] || defaultPath;
+}

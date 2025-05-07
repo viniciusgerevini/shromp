@@ -11,6 +11,10 @@
     <meta name="description" content="Aseprite Wizard for Godot docs" />
     <meta name="keywords" content="aseprite wizard,aseprite,godot,plugin" />
 
+    {{#if (assetImage "favicon.ico")}}
+      <link rel="shortcut icon" href="{{assetImage "favicon.ico"}}" type="image/x-icon" />
+    {{/if}}
+
     {{#each assets.styles}}
       <link rel="stylesheet" href="{{this}}" type="text/css"/>
     {{/each}}
