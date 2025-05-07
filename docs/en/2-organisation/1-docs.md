@@ -172,6 +172,7 @@ Markdown, being focused on content, does not provide many "styling" features. Ho
 
 ![alt text](../assets/images/my_image.png?center)
 
+
 ```
 
 Shromp will translate this to:
@@ -179,6 +180,7 @@ Shromp will translate this to:
 ```html
 
 <img src="/assets/images/my_image.png" class="img-center" />
+
 
 ```
 You can now center your image using the `img-center` class.
