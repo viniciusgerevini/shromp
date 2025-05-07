@@ -1,11 +1,11 @@
 :root {
 	--bg-color: #fff;
 	--text-color: rgb(64, 64, 64);
-	--link-color: rgb(41, 128, 185);
-	--link-hover-color: rgb(15, 96, 149);
-	--table-border-color: #e1e4e5;
-	--table-odd-bg: #f6f8fa;
-	--table-head-color: #edf2f7;
+	--link-color: rgb(232, 103, 53);
+	--link-hover-color: rgb(255, 145, 103);
+	--table-border-color: #e1e4e1;
+	--table-odd-bg: #fff7f2;
+	--table-head-color: #ffeddb;
 	--nav-hover-bg-color: #eee;
 	--nav-expanded-bg-color: #f9f9f9;
 	--nav-code-bg-color: #efefef;
@@ -15,8 +15,8 @@
 [data-theme="dark"] {
 	--bg-color: rgb(32, 35, 38);
 	--text-color: rgba(255, 255, 255, 0.85);
-	--link-color: rgb(136, 204, 255);
-	--link-hover-color: rgb(109, 192, 255);
+	--link-color: rgb(183, 152, 113);
+	--link-hover-color: rgb(221, 175, 116);
 	--table-border-color: #505356;
 	--table-head-color: #3b3e41;
 	--table-odd-bg: #2b2e31;
@@ -245,8 +245,21 @@ h4 { font-size: 1em; }
 
 .nav-logo {
 	margin: 24px auto;
-	display: block;
-	text-align: center;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 2em;
+	color: var(--text-color);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.nav-logo:hover {
+	color: var(--text-color);
+}
+
+.nav-logo svg {
+	width: 64px;
 }
 
 .nav-menu {
@@ -349,6 +362,7 @@ h4 { font-size: 1em; }
 @media (max-width: 470px) {
 	.nav-logo {
 		margin: 10px 5px auto;
+		justify-content: center;
 	}
 	.nav-logo img {
 		max-height: 50px;
@@ -379,6 +393,13 @@ h4 { font-size: 1em; }
 
 	.page-header .site-config {
 		position: inherit;
+		display: flex;
+		justify-content: center;
+		padding: 10px 10px 0px;
+		gap: 5px;
+	}
+	.site-config .selector select {
+		padding-left: 15px;
 	}
 
 	.selector.site-theme-selector::before,.selector.doc-version-selector::before {
@@ -386,3 +407,18 @@ h4 { font-size: 1em; }
 	}
 }
 
+.footer-credits {
+	margin: 24px auto 10px auto;
+	text-align: center;
+	font-family: monospace;
+	font-size: 0.9em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
+
+.footer-credits a {
+	text-decoration: none;
+	font-size: 0.9em;
+}

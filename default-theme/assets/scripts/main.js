@@ -112,3 +112,9 @@
 	loadVersions();
 }());
 
+// this is required to support prism's line numbers
+(function() {
+	document.querySelectorAll('pre').forEach(function(el) {
+		el.classList.add('line-numbers');
+	});
+}());
