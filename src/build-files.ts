@@ -238,6 +238,7 @@ export async function copyImages(): Promise<void> {
 	if (!fileExists(config.sourceFolder("assets", "images"))) {
 		return;
 	}
+
 	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
 }
 

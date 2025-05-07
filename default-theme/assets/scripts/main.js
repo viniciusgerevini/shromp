@@ -51,7 +51,7 @@
 		function setTheme(theme, shouldUpdateSelector) {
 			let newTheme = theme;
 			if (!newTheme || newTheme === "auto") {
-				newTheme = window.matchMedia("(prefers-color-scheme: dark)") ? "dark" : "light";
+				newTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 			}
 
 			document.querySelector("html").setAttribute("data-theme", newTheme);

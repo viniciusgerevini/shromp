@@ -268,7 +268,7 @@ Here is an example:
 
 You can save your theme's assets in the `<theme>/assets` folder, either under `styles`, `scripts` or `images`.
 
-Scripts and styles are copied to `public/assets/scripts/` and `publics/assets/styles` folers respectively. At the moment, the only processing done is generating a content hash to append to the filenames to prevent wrong caching. 
+Assets are copied to their respective folders at `<public>/assets/`. At the moment, the only processing done is generating a content hash to append to the filenames to prevent wrong caching.
 
 These assets will be available in the `assets` variable in the template's root context, so they can be inserted in the page correctly. Here is an example:
 
@@ -291,8 +291,26 @@ These assets will be available in the `assets` variable in the template's root c
 </body>
 </html>
 ```
-Sometimes you might want assets to be included in a given order (i.e a reset.css before the base.css). For that, you can use the same numbering pattern as the other content files: `0-reset.css`, `1-base.css` will be transformed into `reset.<hash>.css`, `base.<hash>.css`.
+The `assets` variable properties are maps of the original file name and the public file path, to allow lookup for the original name. Sample object:
+
+```javascript
+// assets
+{
+  styles: {
+    'main.css': '/assets/styles/main.6980c0c18e.css',
+    'prism.css': '/assets/styles/prism.014b449a00.css'
+  },
+  scripts: {
+    'main.js': '/assets/scripts/main.93cfb2886a.js',
+    'prism.js': '/assets/scripts/prism.edb4f0d7bc.js'
+  },
+  images: {
+    'favicon.ico': '/assets/images/favicon.daaed75b7a.ico'
+  }
+}
+```
+
+Sometimes you might want assets to be included in a given order (i.e a reset.css before the base.css). For that, you can either add them by name using the asset map, or use the same numbering pattern as the other content files: `0-reset.css`, `1-base.css`;
 
 _Note: At the moment no further processing is done in the assets file, because it can get very complicated and opinionated. I'm still thinking on the best approach for this, but most likely it will be providing a way to modify the asset content before creation._
 
-Images assets don't have any special treatment. They are just copied as-is to the `<public>/assets/images` folder.

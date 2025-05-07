@@ -15,6 +15,21 @@
       <link rel="shortcut icon" href="{{assetImage "favicon.ico"}}" type="image/x-icon" />
     {{/if}}
 
+    <!-- Prevent flashing white on dark mode while styles are being loaded -->
+    <style>
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: rgb(32, 35, 38);
+        }
+      }
+    </style>
+    <script>
+      // load theme earlier
+      (function() {
+        document.querySelector("html").setAttribute("data-theme", localStorage.getItem("theme"));
+      }());
+    </script>
+
     {{#each assets.styles}}
       <link rel="stylesheet" href="{{this}}" type="text/css"/>
     {{/each}}

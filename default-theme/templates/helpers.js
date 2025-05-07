@@ -40,6 +40,6 @@ export function createRedirectionLink(locale, version) {
 	return [locale, version].join("/");
 }
 
-export function assetImage(imageName, defaultPath) {
-	return this.assets.images[imageName] || defaultPath;
+export function assetImage(imageName) {
+	return this.assets.images[imageName];
 }

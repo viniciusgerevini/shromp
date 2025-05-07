@@ -14,16 +14,16 @@ import {
 } from "./files.ts";
 import * as logs from "./logs.ts";
 
-type AssetFolder = "styles" | "scripts";
+type AssetFolder = "styles" | "scripts" | "images";
 
-interface ImageAssetMap {
+interface AssetMap {
 	[originalName: string]: string;
 }
 
 export interface SiteAssets {
-	styles: string[];
-	scripts: string[];
-	images: ImageAssetMap;
+	styles: AssetMap;
+	scripts: AssetMap;
+	images: AssetMap;
 }
 
 export async function compileSiteAssets(): Promise<SiteAssets> {
@@ -36,20 +36,30 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 	return {
 		styles: await createTargetAssetsWithHash("styles"),
 		scripts: await createTargetAssetsWithHash("scripts"),
-		images: await createTargetImagesWithHash(),
+		images: await createTargetAssetsWithHash("images"),
 	}
 }
 
-async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<string[]> {
+async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<AssetMap> {
 	if (!fileExists(config.siteAssetsFolder(assetFolder))) {
-		return [];
+		return {};
 	}
-
 	const files = await listFilesInDir(config.siteAssetsFolder(assetFolder));
 
-	return Promise.all(files.map(async (file: string) => {
-		return createTargetFileWithHash(file, assetFolder);
-	}));
+	const assets: AssetMap = {};
+
+	if (assetFolder === "images") {
+		for (let file of files) {
+			assets[file] = await copyTargetImageWithHash(file);
+		}
+		return assets;
+	}
+
+	for (let file of files) {
+			assets[file] = await createTargetFileWithHash(file, assetFolder);
+	}
+
+	return assets;
 }
 
 async function createTargetFileWithHash(file: string, assetFolder: AssetFolder ): Promise<string> {
@@ -61,23 +71,6 @@ async function createTargetFileWithHash(file: string, assetFolder: AssetFolder )
 	const fileUrl = `${config.baseUrl()}assets/${assetFolder}/${targetName}`;
 	logs.success(`Asset file created ${fileUrl}`);
 	return fileUrl;
-}
-
-async function createTargetImagesWithHash(): Promise<ImageAssetMap> {
-	if (!fileExists(config.siteAssetsFolder("images"))) {
-		return {};
-	}
-
-	const files = await listFilesInDir(config.siteAssetsFolder("images"));
-
-	const images: ImageAssetMap = {};
-
-	for (let file of files) {
-		const url = await copyTargetImageWithHash(file);
-		images[file] = url;
-	}
-
-	return images;
 }
 
 async function copyTargetImageWithHash(file: string): Promise<string> {
