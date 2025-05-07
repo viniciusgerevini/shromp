@@ -7,7 +7,6 @@
 |`source_folder`| Folder where the source markdown files are located<br/>Default: `./docs/` |
 |`output_folder`| Folder where the generated HTML files should be saved<br/>Default: `./public/` |
 |`theme_folder`| Folder where site theme handlebars templates are located<br/>Default: `./default-theme/` |
-|`default_page_template`| Default template used for pages<br/>Default: `page` |
 |`generate_doc_index`| Can disable doc index generation even when index.md is present<br/>Default: `false` |
 |`enable_versions`| Include version in the URL<br/>Default: `true` |
 |`version_to_publish`| Documentation version (files will be nested in this folder)<br/>Default: `1.0.0` |

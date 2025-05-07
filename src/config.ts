@@ -9,29 +9,38 @@ interface Config {
   source_folder?: string;
   output_folder?: string;
   theme_folder?: string;
-  default_page_template?: string;
   generate_doc_index?: boolean;
   enable_versions?: boolean;
   enable_locales?: boolean;
   version_to_publish?: string;
 }
 
+interface ThemeConfig {
+  default_template?: string;
+}
+
 let config: Config  = {};
+let themeConfig: ThemeConfig  = {};
 
 export async function loadConfig(configFile: string = "shromp.toml"): Promise<void> {
   const pathToConfig = folderPathAssemblyHelper(configFile);
+  config = await readToml(pathToConfig);
+  themeConfig = await readToml(
+    folderPathAssemblyHelper(config.theme_folder || DEFAULT_SITE_THEME_PATH, ["shromp-theme.toml"])
+  )
+}
 
+async function readToml<T>(pathToConfig: string): Promise<T> {
   if (existsSync(pathToConfig)) {
     let filehandle: FileHandle|undefined = undefined;
     try {
       filehandle = await open(pathToConfig, 'r');
-      config = toml.parse(await filehandle.readFile({ encoding: "utf8" }));
+      return toml.parse(await filehandle.readFile({ encoding: "utf8" }));
     } finally {
       await filehandle?.close();
     }
-  } else {
-    config = {};
   }
+  return {} as T;
 }
 
 const DEFAULT_SITE_THEME_PATH = './default-theme/';
@@ -90,12 +99,11 @@ export default {
     return folderPathAssemblyHelper(path.join(config.theme_folder || DEFAULT_SITE_THEME_PATH, 'assets'), args);
   },
 
-
   /**
    * Default template to use for pages when not set as metadata
    */
   defaultPageTemplate(): string {
-    return config.default_page_template || "page";
+    return themeConfig.default_template || "page";
   },
 
   /**

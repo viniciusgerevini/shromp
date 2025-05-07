@@ -5,7 +5,7 @@
 	--link-hover-color: rgb(255, 145, 103);
 	--table-border-color: #e1e4e1;
 	--table-odd-bg: #fff7f2;
-	--table-head-color: #ffeddb;
+	--table-head-color: #fff1e2;
 	--nav-hover-bg-color: #eee;
 	--nav-expanded-bg-color: #f9f9f9;
 	--nav-code-bg-color: #efefef;
@@ -171,6 +171,10 @@ h4 { font-size: 1em; }
 
 .page-doc table td:nth-child(1) {
 	font-weight: 600;
+}
+
+.page-doc table td:nth-child(1) code {
+	font-weight: normal;
 }
 
 .page-doc table td[colspan="2"] {

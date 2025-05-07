@@ -20,14 +20,25 @@ The theme folder usually looks like this:
             *.js
         styles/
             *.css
+        images/
+            *
     templates/
         partials/
             *.hbs
         *.hbs
         helpers.js
+    shromp-theme.toml
 ```
 
 I'll explain each one of these items in the next sections.
+
+## shromp-theme.toml
+
+This file should be in the root of your theme. It hold theme specific configuration:
+
+| Property | Description |
+|--50%--|----50%-----|
+| `default_template` | Default template to use for content with custom template not set.<br/>Default: `page` |
 
 ## Templates
 

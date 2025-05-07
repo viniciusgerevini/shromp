@@ -1,0 +1,6 @@
+###################################
+# SHROMP THEME CONFIG
+###################################
+
+# Default template used for pages
+default_template="page"
