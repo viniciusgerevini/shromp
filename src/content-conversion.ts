@@ -4,6 +4,7 @@ import { gfmHeadingId, getHeadingList } from "marked-gfm-heading-id";
 import extendedTables from "marked-extended-tables";
 
 import { DirNode, FileNode, isDirNode, pathRelativeToProcess, readFileContent } from "./files.ts";
+import config from './config.ts';
 
 export interface ContentNode { title: string;
 	pathSection: string;
@@ -117,7 +118,7 @@ async function convertFileContent(filePath: string): Promise<ContentForFileResul
 		}
 	}});
 
-	mkd.use(gfmHeadingId({ prefix: "aid-" }));
+	mkd.use(gfmHeadingId({ prefix: config.anchorPrefix() }));
 	mkd.use(extendedTables());
 	mkd.use({
 		renderer: {
@@ -170,7 +171,7 @@ async function convertFileContent(filePath: string): Promise<ContentForFileResul
 }
 
 function transformLinkToTarget(link: string): string {
-	return link.replaceAll(/\/[0-9]+\-/g, '/').replace(".md", ".html");
+	return link.replaceAll(/\/[0-9]+\-/g, '/').replace(".md", ".html").replace(".html#", `.html#${config.anchorPrefix()}`);
 }
 
 interface ContentMetadata {

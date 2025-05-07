@@ -13,6 +13,7 @@ interface Config {
   enable_versions?: boolean;
   enable_locales?: boolean;
   version_to_publish?: string;
+  anchor_prefix?: string;
 }
 
 interface ThemeConfig {
@@ -126,6 +127,10 @@ export default {
   */
   areLocalesEnabled(): boolean {
     return config.enable_locales === undefined || config.enable_locales;
+  },
+
+  anchorPrefix(): string {
+    return config.anchor_prefix || "sp-";
   },
 }
 

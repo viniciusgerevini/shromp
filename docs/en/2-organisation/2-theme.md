@@ -177,7 +177,7 @@ THe result tree might look like this:
       children: [
         {
           title: "A H2 heading",
-          path: "/en/1.0/another-page#aid-h2-heading",
+          path: "/en/1.0/another-page#sp-h2-heading",
           level: 2,
           children: [],
         },
@@ -188,12 +188,12 @@ THe result tree might look like this:
           children: [
             {
               title: "A H2 heading",
-              path: "/en/1.0/intro.html#aid-h2-heading",
+              path: "/en/1.0/intro.html#sp-h2-heading",
               level: 2,
               children: [
                 {
                   title: "A H3 heading",
-                  path: "/en/1.0/intro.html#aid-h3-heading",
+                  path: "/en/1.0/intro.html#sp-h3-heading",
                   level: 3,
                   children: [],
                 },

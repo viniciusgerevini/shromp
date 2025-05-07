@@ -71,7 +71,7 @@ describe('Content conversion', async () => {
 				nestedContent: [testNode({
 					title: 'Some File',
 					pathSection: 'somefile',
-					htmlContent: '<h1 id="aid-some-file">Some File</h1>\n<p> with content</p>\n',
+					htmlContent: '<h1 id="sp-some-file">Some File</h1>\n<p> with content</p>\n',
 				})],
 			});
 
@@ -103,13 +103,13 @@ describe('Content conversion', async () => {
 				nestedContent: [testNode({
 					title: 'Some File',
 					pathSection: 'somefile',
-					htmlContent: '<h1 id="aid-some-file">Some File</h1>\n'+
+					htmlContent: '<h1 id="sp-some-file">Some File</h1>\n'+
 						'<p> with content</p>\n'+
-						'<h2 id="aid-a-secondary-title">A secondary title</h2>\n'+
-						'<h2 id="aid-another-secondary-title">Another secondary title</h2>\n',
+						'<h2 id="sp-a-secondary-title">A secondary title</h2>\n'+
+						'<h2 id="sp-another-secondary-title">Another secondary title</h2>\n',
 					anchors: [
-						{ id: 'aid-a-secondary-title', name: 'A secondary title', level: 2 },
-						{ id: 'aid-another-secondary-title', name: 'Another secondary title', level: 2 },
+						{ id: 'sp-a-secondary-title', name: 'A secondary title', level: 2 },
+						{ id: 'sp-another-secondary-title', name: 'Another secondary title', level: 2 },
 					],
 				})]
 			});
@@ -135,13 +135,13 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n'+
-					'<h2 id="aid-a-secondary-title">A secondary title</h2>\n'+
-					'<h2 id="aid-another-secondary-title">Another secondary title</h2>\n',
+					'<h2 id="sp-a-secondary-title">A secondary title</h2>\n'+
+					'<h2 id="sp-another-secondary-title">Another secondary title</h2>\n',
 				anchors: [
-					{ id: 'aid-a-secondary-title', name: 'A secondary title', level: 2 },
-					{ id: 'aid-another-secondary-title', name: 'Another secondary title', level: 2 },
+					{ id: 'sp-a-secondary-title', name: 'A secondary title', level: 2 },
+					{ id: 'sp-another-secondary-title', name: 'Another secondary title', level: 2 },
 				],
 				isIndex: true,
 			});
@@ -199,7 +199,7 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Banana',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				isIndex: true,
 				metadata: { page_title: 'Banana' },
@@ -226,12 +226,12 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-index-file">Index File</h1>\n'+
+				htmlContent: '<h1 id="sp-index-file">Index File</h1>\n'+
 					'<p> with content</p>\n' +
-					'<h2 id="aid-include">include</h2>\n'+
-					'<h3 id="aid-do-not-include">do not include</h3>\n',
+					'<h2 id="sp-include">include</h2>\n'+
+					'<h3 id="sp-do-not-include">do not include</h3>\n',
 				anchors: [
-					{ id: 'aid-include', name: 'include', level: 2 },
+					{ id: 'sp-include', name: 'include', level: 2 },
 				],
 				isIndex: true,
 				metadata: { headings_nav_max_level: 2 },
@@ -258,7 +258,7 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				isIndex: true,
 				template: 'test-template',
@@ -285,7 +285,7 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				doNotShowInNavigation: true,
 				isIndex: true,
@@ -313,7 +313,7 @@ describe('Content conversion', async () => {
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
 					'<p> with content</p>\n',
 				isIndex: true,
 				metadata: { something_else: "value", this_should_be_true: true },
@@ -335,14 +335,16 @@ describe('Content conversion', async () => {
 
 			mockFileRead(
 				'docs/index.md',
-				'# Doc index File\n [another page](../01-page.md) [external link](https://thisisvini.com)'
+				'# Doc index File\n [another page](../01-page.md) [external link](https://thisisvini.com)\n' +
+				'[link-with-anchor](../01-page.md#further-down)'
 			);
 
 			const expectedContentTree = testNode({
 				title: 'Doc index File',
 				pathSection: 'docs',
-				htmlContent: '<h1 id="aid-doc-index-file">Doc index File</h1>\n'+
-					'<p> <a href="../page.html">another page</a> <a href="https://thisisvini.com">external link</a></p>\n',
+				htmlContent: '<h1 id="sp-doc-index-file">Doc index File</h1>\n'+
+					'<p> <a href="../page.html">another page</a> <a href="https://thisisvini.com">external link</a>\n' +
+					'<a href="../page.html#sp-further-down">link-with-anchor</a></p>\n',
 				isIndex: true,
 			});
 

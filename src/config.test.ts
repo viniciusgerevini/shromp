@@ -22,6 +22,7 @@ enable_versions=false
 version_to_publish="shromp-version"
 enable_locales=false
 default_locale="shromp-locale"
+anchor_prefix="pppp-"
 `;
 
 			mockFs({ './custom/shromp.toml': shrompConfig });
@@ -38,6 +39,7 @@ default_locale="shromp-locale"
 			assert.equal(config.areLocalesEnabled(), false);
 			assert.equal(config.versionToPublish(), 'shromp-version');
 			assert.equal(config.defaultLocale(), 'shromp-locale');
+			assert.equal(config.anchorPrefix(), 'pppp-');
 		});
 
 		it('loads config from template config file', async () => {
@@ -104,6 +106,7 @@ default_template="banana"
 		assert.equal(config.areLocalesEnabled(), true);
 		assert.equal(config.versionToPublish(), '1.0.0');
 		assert.equal(config.defaultLocale(), 'en');
+		assert.equal(config.anchorPrefix(), 'sp-');
 	});
 
 	it('joins paths correctly for path configs', async () => {
