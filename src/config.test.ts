@@ -33,7 +33,7 @@ default_locale="shromp-locale"
 			assert.equal(config.sourceFolder(), pathRelativeToProcess('../shromp-source/'));
 			assert.equal(config.outputFolder(), pathRelativeToProcess('../shromp-public/'));
 			assert.equal(config.templatesFolder(), pathRelativeToProcess('shromp-theme/templates'));
-			assert.equal(config.siteAssetsFolder(), pathRelativeToProcess('shromp-theme/assets'));
+			assert.equal(config.themeAssetsFolder(), pathRelativeToProcess('shromp-theme/assets'));
 			assert.equal(config.defaultPageTemplate(), 'shromp-template');
 			assert.equal(config.shouldGenerateDocIndex(), true);
 			assert.equal(config.isVersioningEnabled(), false);
@@ -80,7 +80,7 @@ default_locale="shromp-locale"
 		assert.equal(config.sourceFolder(), pathRelativeToProcess('./docs/'));
 		assert.equal(config.outputFolder(), pathRelativeToProcess('./public/'));
 		assert.equal(config.templatesFolder(), pathRelativeToProcess('default-theme/templates'));
-		assert.equal(config.siteAssetsFolder(), pathRelativeToProcess('default-theme/assets'));
+		assert.equal(config.themeAssetsFolder(), pathRelativeToProcess('default-theme/assets'));
 		assert.equal(config.defaultPageTemplate(), 'page');
 		assert.equal(config.shouldGenerateDocIndex(), false);
 		assert.equal(config.isVersioningEnabled(), true);

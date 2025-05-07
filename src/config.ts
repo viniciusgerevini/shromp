@@ -86,7 +86,7 @@ export default {
   /**
    * Folder where the site theme styles and scripts are saved
    */
-  siteAssetsFolder(...args: string[]): string {
+  themeAssetsFolder(...args: string[]): string {
     return folderPathAssemblyHelper(path.join(config.theme_folder || DEFAULT_SITE_THEME_PATH, 'assets'), args);
   },
 

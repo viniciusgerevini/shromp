@@ -41,10 +41,10 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 }
 
 async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<AssetMap> {
-	if (!fileExists(config.siteAssetsFolder(assetFolder))) {
+	if (!fileExists(config.themeAssetsFolder(assetFolder))) {
 		return {};
 	}
-	const files = await listFilesInDir(config.siteAssetsFolder(assetFolder));
+	const files = await listFilesInDir(config.themeAssetsFolder(assetFolder));
 
 	const assets: AssetMap = {};
 
@@ -63,7 +63,7 @@ async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<Ass
 }
 
 async function createTargetFileWithHash(file: string, assetFolder: AssetFolder ): Promise<string> {
-	const content = await readFileContent(config.siteAssetsFolder(assetFolder, file));
+	const content = await readFileContent(config.themeAssetsFolder(assetFolder, file));
 	const hash = generateHashForContent(content);
 	const targetName = getNameWithHash(file, hash);
 	const targetPath = config.outputFolder("assets", assetFolder, targetName);
@@ -74,11 +74,11 @@ async function createTargetFileWithHash(file: string, assetFolder: AssetFolder )
 }
 
 async function copyTargetImageWithHash(file: string): Promise<string> {
-	const hash = await generateHashForFile(config.siteAssetsFolder("images", file));
+	const hash = await generateHashForFile(config.themeAssetsFolder("images", file));
 	const targetName = getNameWithHash(file, hash);
 	const fileUrl = `${config.baseUrl()}assets/images/${targetName}`;
 	await copyTo(
-		config.siteAssetsFolder("images", file),
+		config.themeAssetsFolder("images", file),
 		config.outputFolder("assets", "images", targetName)
 	);
 	logs.success(`Asset file created ${fileUrl}`);
