@@ -40,6 +40,7 @@ a {
 	font-family: var(--default-font);
 	color: var(--link-color);
 	text-decoration: underline;
+	text-decoration-thickness: 1px;
 }
 
 a:hover {
