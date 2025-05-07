@@ -15,7 +15,7 @@ default_page_template="page"
 
 # Can disable doc index generation even when index.md is present
 # default: false
-generate_doc_index=false
+generate_doc_index=true
 
 # Include version in the URL
 # default: true

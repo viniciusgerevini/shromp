@@ -35,3 +35,7 @@ export function getNavCurrentState(navLink, currentFile) {
 export function getNavClassWhenCurrent(navLink, currentFile) {
 	return navLink === currentFile ? "current" : "";
 };
+
+export function createRedirectionLink(locale, version) {
+	return [locale, version].join("/");
+}
