@@ -72,7 +72,7 @@ Check the [partials documentation](https://handlebarsjs.com/guide/partials.html)
 
 > Helpers can be used to implement functionality that is not part of the Handlebars language itself.
 
-Shromp allows you to define custom headers by including them in the `<theme>/templates/helpers.js` file. Just implement and export the function and it will be available as a helper with same name. For example:
+Shromp allows you to define custom helpers by including them in the `<theme>/templates/helpers.js` file. Just implement and export the function and it will be available as a helper with same name. For example:
 
 The helper definition:
 
@@ -115,7 +115,7 @@ Check the Handlebar's [helpers documentation](https://handlebarsjs.com/guide/exp
 
 ### Data available in the templates
 
-Shromp provides a way for you to send metadata from your markdown content to your template by using the metadata block, as describe on the [/docs folder documentation](./1-docs.md#metadata).
+Shromp provides a way for you to send metadata from your markdown content to your template by using the metadata block, as describe on the [docs folder documentation](./1-docs.md#metadata).
 
 Some of this data is used to configure the template, but you can also pass custom data. To define metadata in your page, create a comment block as the first thing in your markdown file. This block should contain one property per line. Here is an example:
 
@@ -163,7 +163,7 @@ Child pages and headings are nested, forming a navigation tree. For the followin
             index.md
         index.md
 ```
-THe result tree might look like this:
+The result tree might look like this:
 
 ```javascript
 {
@@ -251,7 +251,7 @@ Shromp makes some useful information available in the template root context by d
 | `navigationMenu` | A link tree that can be used to construct a navigation menu, like the one in this site.|
 | `childLinks` | A tree of links hosted under this file's path. Usefull for building index pages.|
 | `assets` | This is a list of assets file generated from the assets folder. More details in the next section.|
-| `metadata`: | An object containing all metadata from this content, including custom defined values.|
+| `metadata` | An object containing all metadata from this content, including custom defined values.|
 
 
 #### Accessing data in the template

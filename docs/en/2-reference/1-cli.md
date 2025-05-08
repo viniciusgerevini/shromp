@@ -1,3 +1,6 @@
+<!--
+nav_max: 1
+-->
 # Shromp CLI
 
 Check [introduction](../1-introduction/index.md) for instalation instructions.

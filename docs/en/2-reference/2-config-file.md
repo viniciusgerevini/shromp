@@ -1,9 +1,15 @@
-# shromp.toml
+<!--
+nav_max: 1
+-->
+# Shromp config (shromp.toml)
 
+Shromp's configuration file.
+
+## Properties
 
 | Property | Description |
 |--50%--|----50%-----|
-|`base_url`| Overwrite base URL for assets. Useful when hosting files in any location other than the root.<br/> Default: "/"|
+|`base_url`| Overwrite base URL for assets. Useful when hosting files in any location other than the root.<br/> Default: `/`|
 |`source_folder`| Folder where the source markdown files are located<br/>Default: `./docs/` |
 |`output_folder`| Folder where the generated HTML files should be saved<br/>Default: `./public/` |
 |`theme_folder`| Folder where site theme handlebars templates are located<br/>Default: `./default-theme/` |

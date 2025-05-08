@@ -1,4 +1,4 @@
-# Docs (a.k.a content files)
+# Content files (a.k.a. /docs)
 
 The `docs/` folder hold your source files. Those files should be written in `markdown`, and the file structure is mirrored to the `public/` folder. For example, the file `docs/en/1.0.0/introduction/index.md` will be avaialable as `public/en/1.0.0/introduction/index.html`.
 
