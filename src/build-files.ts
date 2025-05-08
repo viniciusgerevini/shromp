@@ -151,7 +151,7 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 	const localLinks: NavigationLink[] = [];
 
 	const anchorStack: Array<Array<NavigationLink>> = [localLinks];
-	let currentLevel = 2;
+	let currentLevel = content.anchors.length ? content.anchors[0].level : 2 ;
 
 	for (let anchor of content.anchors) {
 		const currentList = anchorStack[anchorStack.length - 1];
