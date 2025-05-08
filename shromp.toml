@@ -22,7 +22,7 @@ generate_doc_index=true
 enable_versions=true
 
 # Documentation version (files will be nested in this folder)
-version_to_publish="1.0.0"
+version_to_publish="0.0.1"
 
 # When enabled the first folder level are the locales roots
 # and each locale root has independent navigation
