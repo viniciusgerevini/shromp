@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { program } from 'commander';
