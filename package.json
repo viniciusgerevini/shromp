@@ -14,6 +14,10 @@
   },
   "author": "Vinicius Gerevini <viniciusgerevini@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viniciusgerevini/shromp"
+  },
   "dependencies": {
     "commander": "^13.1.0",
     "consola": "^3.4.2",
