@@ -103,11 +103,11 @@ async function convertFileContent(filePath: string): Promise<ContentForFileResul
 					template = metadata.template;
 					delete metadata.template;
 				}
-				if (metadata.headings_nav_max_level || metadata.headings_nav_max_level === 0) {
-					headingAnchorsMaxLevel = metadata.headings_nav_max_level;
+				if (metadata.nav_max || metadata.nav_max === 0) {
+					headingAnchorsMaxLevel = metadata.nav_max;
 				}
-				if (metadata.do_not_show_in_nav) {
-					doNotShowInNavigation = metadata.do_not_show_in_nav;
+				if (metadata.hidden) {
+					doNotShowInNavigation = metadata.hidden;
 				}
 				if (meta.contentToRemove) {
 					return markdown.replace(meta.contentToRemove, "");

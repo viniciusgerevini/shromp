@@ -220,7 +220,7 @@ describe('Content conversion', async () => {
 
 			mockFileRead(
 				'docs/index.md',
-				'<!--\nheadings_nav_max_level: 2\n-->\n# Index File\n with content\n## include \n### do not include'
+				'<!--\nnav_max: 2\n-->\n# Index File\n with content\n## include \n### do not include'
 			);
 
 			const expectedContentTree = testNode({
@@ -234,7 +234,7 @@ describe('Content conversion', async () => {
 					{ id: 'sp-include', name: 'include', level: 2 },
 				],
 				isIndex: true,
-				metadata: { headings_nav_max_level: 2 },
+				metadata: { nav_max: 2 },
 			});
 
 			const contentTree = await generateHtmlForTree(fileTree);
@@ -279,7 +279,7 @@ describe('Content conversion', async () => {
 
 			mockFileRead(
 				'docs/index.md',
-				'<!--\ndo_not_show_in_nav: true\n-->\n# Doc index File\n with content'
+				'<!--\nhidden: true\n-->\n# Doc index File\n with content'
 			);
 
 			const expectedContentTree = testNode({
@@ -289,7 +289,7 @@ describe('Content conversion', async () => {
 					'<p> with content</p>\n',
 				doNotShowInNavigation: true,
 				isIndex: true,
-				metadata: { do_not_show_in_nav: true },
+				metadata: { hidden: true },
 			});
 
 			const contentTree = await generateHtmlForTree(fileTree);

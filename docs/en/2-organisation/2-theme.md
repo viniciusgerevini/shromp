@@ -123,8 +123,8 @@ Some of this data is used to configure the template, but you can also pass custo
 <!--
 page_title: This is a custom title
 template: custom_template
-headings_nav_max_level: 3
-do_not_show_in_nav: true
+nav_max: 3
+hidden: true
 this_is_a_custom_metadata: custom value
 another_custom_metadata: 123
 custom_flag_option
@@ -211,8 +211,8 @@ These metadata options are related to the navigation tree:
 
 | Metadata | Description |
 |--- 40% ---|--- 70% ---|
-|`headings_nav_max_level: <number>`| Max heading depth to include in the navigation. Default: 3. |
-|`do_not_show_in_nav: <boolean>`| Define whether this page should be included in the navigation tree at all. |
+|`nav_max: <number>`| Max heading depth to include in the navigation. Default: 3. |
+|`hidden: <boolean>`| Define whether this page should be included in the navigation tree at all. |
 
 
 #### Custom metadata
