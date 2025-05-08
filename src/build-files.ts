@@ -17,6 +17,7 @@ interface ContentData {
 	template: string | undefined;
 	metadata: ContentNode["metadata"];
 	childLinks: NavigationLink[];
+	url: string;
 }
 
 type ContentCache = { [key:string]: ContentData };
@@ -71,11 +72,12 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets, temp
 		template: content.template,
 		pageTitle: content.title,
 		mainContent: content.htmlContent,
-		currentFilePath: indexPath,
+		currentFilePath: config.baseUrl(indexPath),
 		metadata: content.metadata,
 		locale: config.defaultLocale(),
 		version: config.isVersioningEnabled() ? config.versionToPublish() : undefined,
 		assets,
+		baseUrl: config.baseUrl(),
 	}, templates);
 
 	logs.success("Root index created");
@@ -138,11 +140,12 @@ interface CreateNavigationLinksParams {
 function createNavigationLinks({ content, contentCache, locale, version, basePath = "" } : CreateNavigationLinksParams): NavigationLink {
 	const thisPath = path.join(basePath, content.pathSection);
 	const filePath = content.isIndex ? path.join(thisPath, "index.html") : `${thisPath}.html`;
+	const routeUrl = config.baseUrl(filePath);
 
 	const mapAnchor = (anchor: ContentAnchor): NavigationLink => {
 		return {
 			title: anchor.name,
-			path: `${filePath}#${anchor.id}`,
+			path: `${routeUrl}#${anchor.id}`,
 			level: anchor.level,
 			children: [],
 		}
@@ -193,12 +196,13 @@ function createNavigationLinks({ content, contentCache, locale, version, basePat
 			template: content.template,
 			childLinks: children,
 			metadata: content.metadata,
+			url: routeUrl,
 		};
 	}
 
 	return {
 		title: content.title,
-		path: filePath,
+		path: routeUrl,
 		level: 1,
 		children: localLinks.concat(children),
 	};
@@ -219,10 +223,11 @@ async function createPages(
 			navigationMenu: isNavigationLinksForLocale(navigationLinks) ? navigationLinks[content.locale] : navigationLinks,
 			locale: content.locale,
 			version: config.isVersioningEnabled() ? content.version : undefined,
-			currentFilePath: filePath,
+			currentFilePath: content.url,
 			childLinks: content.childLinks,
 			metadata: content.metadata,
 			assets,
+			baseUrl: config.baseUrl(),
 		}, templates);
 		logs.success(`Page created ${filePath}`);
 	}

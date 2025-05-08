@@ -88,7 +88,7 @@
 		selector.innerHTML = "";
 
 		try {
-			const response = await fetch("/versions.json");
+			const response = await fetch(`${baseUrl}/versions.json`);
 			const json = await response.json();
 
 			if (json && json.versions) {

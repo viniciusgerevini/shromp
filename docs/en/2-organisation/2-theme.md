@@ -247,11 +247,12 @@ Shromp makes some useful information available in the template root context by d
 | `mainContent` | This is the source file's markdown content converted to HTML.|
 | `locale` | The content locale. |
 | `version` | The content version, or undefined if versioning is disabled. |
-| `currentFilePath` | The path the current file will be saved. Useful for helpers like the one in the previous helper example.|
+| `currentFilePath` | The path the current file will be available. Useful for helpers like the one in the previous helper example.|
 | `navigationMenu` | A link tree that can be used to construct a navigation menu, like the one in this site.|
 | `childLinks` | A tree of links hosted under this file's path. Useful for building index pages.|
 | `assets` | This is a list of assets file generated from the assets folder. More details in the next section.|
 | `metadata` | An object containing all metadata from this content, including custom-defined values.|
+| `baseUrl` | Site base URL configured via `shromp.toml` |
 
 
 #### Accessing data in the template

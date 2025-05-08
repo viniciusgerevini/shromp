@@ -126,4 +126,13 @@ default_template="banana"
 			config.templatesFolder("this", "should", "work"),
 			pathRelativeToProcess("default-theme/templates/this/should/work"));
 	});
+
+	it('returns base url with subpaths', async () => {
+		await loadConfig("./some-file");
+
+		assert.equal(
+			config.baseUrl("this", "should/", "work//"),
+			"/this/should/work/"
+		);
+	});
 });

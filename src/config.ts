@@ -63,8 +63,8 @@ export default {
    * Overwrite base URL. Useful when hosting files in any location other than the
    * root
    */
-  baseUrl(): string {
-    return config.base_url || "/";
+  baseUrl(...args: string[]): string {
+    return [ config.base_url || "/"].concat(args).join("/").replaceAll(/\/+\//g, "/");
   },
 
   /**

@@ -59,11 +59,11 @@ First, let's create a new template on `<site-theme>/templates` that will hold ou
 <html lang="{{locale}}">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL={{locale}}/{{version}}" />
+    <meta http-equiv="refresh" content="0; URL={{baseUrl}}/{{locale}}/{{version}}" />
     <title>{{pageTitle}}</title>
 </head>
 <body>
-    If you are not redirected automatically, follow this <a href='{{locale}}/{{version}}}}'>link</a>.
+    If you are not redirected automatically, follow this <a href='{{baseUrl}}/{{locale}}/{{version}}}}'>link</a>.
 </body>
 </html>
 ```
