@@ -9,14 +9,14 @@ Alright! I went too far. I don't think the `.html` is a big deal, but some peopl
 
 ## Webserver configuration
 
-If you are using a webserver there is definitely a way for you to use rewrites and avoid using the html extension.
+If you are using a webserver there is definitely a way for you to use rewrites and avoid using the HTML extension.
 
-If you are deploying to Github Pages, this is already a feature out-of-the-box. Having said that, at the time I'm writing this guide, Shromp's menu include the html extension and there is no built-in way to remove them during build. However, implementing a helper to do so should be straight forward.
+If you are deploying to Github Pages, this is already a feature out-of-the-box. Having said that, at the time I'm writing this guide, Shromp's menu include the HTML extension and there is no built-in way to remove them during build. However, implementing a helper to do so should be straight forward.
 
 
 ## The static solution
 
-If you played around with static sites enough you know that most webservers come configured in a way that they understand that `index.html` doesn't need to be explicitly added to the path. With this knowledge you can configure your files to benefit from that. For example:
+If you played around with static sites enough, you know that most webservers come configured in a way that they understand that `index.html` doesn't need to be explicitly added to the path. With this knowledge, you can configure your files to benefit from that. For example:
 
 If your content looks like this:
 

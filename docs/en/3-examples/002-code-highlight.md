@@ -30,9 +30,9 @@ For theme, you can select one of the ones from prism's website, or you can find 
 
 Unfortunately, none of these themes support light/dark mode, and they don't make use of CSS variables to make our lives easier.
 
-I did go through the hassle of adapting the theme in the Shromp's site to use CSS variables. If you check this source code you will find you can change these colors. However, they are based on the `Coy` theme, because I like the stripped background.
+I did go through the hassle of adapting the theme in the Shromp's site to use CSS variables. If you check this source code, you will find you can change these colours. However, they are based on the `Coy` theme, because I like the stripped background.
 
-There is a simpler way to support light/dark mode though. Go through the themes list and pick one for dark mode and one for light mode. You can also create them yourself if you have time to spare.
+There is a simpler way to support light/dark mode, though. Go through the themes list and pick one for dark mode and one for light mode. You can also create them yourself if you have time to spare.
 
 Create a CSS file to hold these styles. I have mine as prism.css.
 
@@ -49,7 +49,7 @@ If you are using my current light/dark mode implementation, paste the light mode
 
 ```
 
-If you don't have a theme switcher, and just want to support the vanilla light/dark mode system, you can do the same by using these queries:
+If you don't have a theme switcher and just want to support the vanilla light/dark mode system, you can do the same by using these queries:
 
 ```css
 @media (prefers-color-scheme: light) {
@@ -65,7 +65,7 @@ With that, each mode will have its own theme.
 
 ## Line numbers plugin
 
-If like me, you like to have line numbers in your code block, you need to select the "line numbers" plugin when downloading prism.
+If, like me, you like to have line numbers in your code block, you need to select the "line numbers" plugin when downloading prism.
 
 You soon will notice that the line numbers don't work out-of-the-box. To make them work, add this to your footer or JS file.
 

@@ -34,7 +34,7 @@ I'll explain each one of these items in the next sections.
 
 ## shromp-theme.toml
 
-This file should be in the root of your theme. It hold theme specific configuration:
+This file should be in the root of your theme. It holds theme specific configuration:
 
 | Property | Description |
 |--50%--|----50%-----|
@@ -42,7 +42,7 @@ This file should be in the root of your theme. It hold theme specific configurat
 
 ## Templates
 
-Check the [Handlebars documentation](https://handlebarsjs.com/guide/) for syntax and features. Usually a handlebars file looks like this:
+Check the [Handlebars documentation](https://handlebarsjs.com/guide/) for syntax and features. Usually, a handlebars file looks like this:
 
 ```hbs
 <ul class="people_list">
@@ -55,7 +55,7 @@ Check the [Handlebars documentation](https://handlebarsjs.com/guide/) for syntax
 
 > Handlebars allows for template reuse through partials. Partials are normal Handlebars templates that may be called directly by other templates.
 
-In Shromp, partials should be defined in the `<theme>/templates/partials/` folder. To use a partial, just include `{{ > partial_name }}` to your template file. Here is an example with a page that re-uses header, footer and side navigation:
+In Shromp, partials should be defined in the `<theme>/templates/partials/` folder. To use a partial, just include `{{ > partial_name }}` in your template file. Here is an example with a page that re-uses header, footer and side navigation:
 
 ```hbs
 {{> header }}
@@ -72,7 +72,7 @@ Check the [partials documentation](https://handlebarsjs.com/guide/partials.html)
 
 > Helpers can be used to implement functionality that is not part of the Handlebars language itself.
 
-Shromp allows you to define custom helpers by including them in the `<theme>/templates/helpers.js` file. Just implement and export the function and it will be available as a helper with same name. For example:
+Shromp allows you to define custom helpers by including them in the `<theme>/templates/helpers.js` file. Just implement and export the function, and it will be available as a helper with the same name. For example:
 
 The helper definition:
 
@@ -115,7 +115,7 @@ Check the Handlebar's [helpers documentation](https://handlebarsjs.com/guide/exp
 
 ### Data available in the templates
 
-Shromp provides a way for you to send metadata from your markdown content to your template by using the metadata block, as describe on the [docs folder documentation](./1-docs.md#metadata).
+Shromp provides a way for you to send metadata from your markdown content to your template by using the metadata block, as described on the [docs folder documentation](./1-docs.md#metadata).
 
 Some of this data is used to configure the template, but you can also pass custom data. To define metadata in your page, create a comment block as the first thing in your markdown file. This block should contain one property per line. Here is an example:
 
@@ -142,7 +142,7 @@ custom_flag_option
 
 #### Navigation menu metadata
 
-The next section will cover which data is made available to your template by default. One of the most useful one is the `navigationMenu`, which can be used to build your site's navigation and breadcrumbs.
+The next section will cover which data is made available to your template by default. One of the most useful is the `navigationMenu`, which can be used to build your site's navigation and breadcrumbs.
 
 The navigationMenu has the following contract:
 
@@ -243,20 +243,20 @@ Shromp makes some useful information available in the template root context by d
 
 | metadata | description |
 |---40%---|---70%---|
-| `pageTitle` | The title for the page. By default, it's the first H1 in your markdown document. It can be overriden by setting the `page_title` metadata in your source markdown file.|
+| `pageTitle` | The title for the page. By default, it's the first H1 in your markdown document. It can be overridden by setting the `page_title` metadata in your source markdown file.|
 | `mainContent` | This is the source file's markdown content converted to HTML.|
 | `locale` | The content locale. |
 | `version` | The content version, or undefined if versioning is disabled. |
-| `currentFilePath` | The path the current file will be saved to. Usefull for helpers like the one in the previous helper example.|
+| `currentFilePath` | The path the current file will be saved. Useful for helpers like the one in the previous helper example.|
 | `navigationMenu` | A link tree that can be used to construct a navigation menu, like the one in this site.|
-| `childLinks` | A tree of links hosted under this file's path. Usefull for building index pages.|
+| `childLinks` | A tree of links hosted under this file's path. Useful for building index pages.|
 | `assets` | This is a list of assets file generated from the assets folder. More details in the next section.|
-| `metadata` | An object containing all metadata from this content, including custom defined values.|
+| `metadata` | An object containing all metadata from this content, including custom-defined values.|
 
 
 #### Accessing data in the template
 
-The data above is avaible in the root context in your template, which can be accessed either directly or using the `@root.` prefix.
+The data above is available in the root context in your template, which can be accessed either directly or using the `@root.` prefix.
 
 Here is an example:
 
@@ -323,5 +323,5 @@ The `assets` variable properties are maps of the original file name and the publ
 
 Sometimes you might want assets to be included in a given order (i.e a reset.css before the base.css). For that, you can either add them by name using the asset map, or use the same numbering pattern as the other content files: `0-reset.css`, `1-base.css`;
 
-_Note: At the moment no further processing is done in the assets file, because it can get very complicated and opinionated. I'm still thinking on the best approach for this, but most likely it will be providing a way to modify the asset content before creation._
+_Note: At the moment, no further processing is done in the assets file, because it can get very complicated and opinionated. I'm still thinking about the best approach for this, but most likely it will be providing a way to modify the asset content before creation._
 

@@ -1,6 +1,6 @@
 # About
 
-Shromp was created with love by 60 hard working shrimp and I.
+Shromp was created with love by 60 hard-working shrimp and I.
 
 🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐<br/>
 🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐🦐<br/>
@@ -18,7 +18,7 @@ Here are some other examples using Shromp:
 
 ## Dependencies
 
-This solution wouldn't be possible without the amazing open source projects out there.
+This solution wouldn't be possible without the amazing open-source projects out there.
 
 ### Shromp
 - [Commander](https://github.com/tj/commander.jshttps://github.com/tj/commander.js): Command line interface tool

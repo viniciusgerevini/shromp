@@ -5,11 +5,11 @@ nav_max: 1
 
 Check [introduction](../1-introduction/index.md) for instalation instructions.
 
-The Shromp CLI allows you to initialize and build shromp projects.
+The Shromp CLI allows you to initialise and build shromp projects.
 
 ## init
 
-Initialize a shromp project with boilerplate files.
+Initialise a shromp project with boilerplate files.
 
 ```console
 shromp init [options]

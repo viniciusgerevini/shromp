@@ -3,7 +3,7 @@ nav_max: 1
 -->
 # Theme config (shromp-theme.toml)
 
-Shromp theme's configuration file. This file should be present on every theme folder. Check the [theming page](../2-organisation/2-theme.md) for more details.
+Shromp theme's configuration file. This file should be present in every theme folder. Check the [theming page](../2-organisation/2-theme.md) for more details.
 
 ## Properties
 

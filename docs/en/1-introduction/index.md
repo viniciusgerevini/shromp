@@ -32,7 +32,7 @@ The generated files are exactly the source for this site. So, if you like someth
 
 You can rename these folders and change the configuration to your taste.
 
-To generate the files to be hosted you need to run:
+To generate the files to be hosted, you need to run:
 
 ```console
 shromp build
@@ -42,7 +42,7 @@ Don't forget to run the build command after any doc or theme changes to generate
 
 ## Browsing your docs locally
 
-You will want to host these docs in a webserver so you can see them in action. For local development, I recommend using the `http-server` package which makes hosting static files a breeze.
+You will want to host these docs in a webserver so you can see them in action. For local development, I recommend using the `http-server` package, which makes hosting static files a breeze.
 
 
 ```console

@@ -20,9 +20,9 @@ public/
 
 - If locales are enabled, generated files will be added to locale folders (i.e `en/`, `fr/`, `es/`).
 - If versions are enabled, generated files will be nested under the version folder.
-- If neither locales or versions are enabled, generated files will be placed in the `<public>` root.
-- `assets/` contain asset files both from `<content>/` and `<theme>/` folders.
-- `versions.json` contain an array with all versions detected when running `shrimp build`.
+- If neither locales nor versions are enabled, generated files will be placed in the `<public>` root.
+- `assets/` contains asset files from both `<content>/` and `<theme>/` folders.
+- `versions.json` contains an array with all versions detected when running `shrimp build`.
 
 
 This public folder can be hosted as-is on any webserver, including Github Pages.

@@ -1,10 +1,10 @@
 # Content files (a.k.a. /docs)
 
-The `docs/` folder hold your source files. Those files should be written in `markdown`, and the file structure is mirrored to the `public/` folder. For example, the file `docs/en/1.0.0/introduction/index.md` will be avaialable as `public/en/1.0.0/introduction/index.html`.
+The `<docs>/` folder holds your source files. Those files should be written in `markdown`, and the file structure is then mirrored in the `<public>/` folder. For example, the file `docs/en/1.0.0/introduction/index.md` will be available as `public/en/1.0.0/introduction/index.html`.
 
 ## Locale and versioning
 
-By default, both locale and versioning are enabled. This means the second folder level will represent the locale (language) and the third folder level is the version. They can be disabled individually according to your needs in the `shromp.toml` file.
+By default, both locale and versioning are enabled. This means the second folder level will represent the locale (language), and the third folder level is the version. They can be disabled individually according to your needs in the `shromp.toml` file.
 
 ### Locales and versions disabled
 
@@ -42,11 +42,11 @@ If `enable_locales` is true, the first folder level after the root will represen
 
 In this case, the root `docs/` folder will usually not contain any files, and each inner folder will have docs for a given language.
 
-Each locale folder has its own navigation structure (more about this in the next section) which might or might not be the same. Even though it's not a requirement for them to match, it's interesting to keep the same file structure and names, so when switching languages the redirect will land in the right page instead of a not found page.
+Each locale folder has its own navigation structure (more about this in the next section), which might or might not be the same. Even though it's not a requirement for them to match, it's interesting to keep the same file structure and names, so when switching languages, the redirect will land in the right page instead of a not found page.
 
 ### Versioning enabled
 
-When `enable_versions` is true, a version folder will be created (as first level if `enable_locales` is disabled, and inside the locales folders if enabled).
+When `enable_versions` is true, a version folder will be created (as the first level if `enable_locales` is disabled, and inside the locales folders if enabled).
 
 The docs structure don't change, only the `public/` files. For example, for the following `docs/` structure
 
@@ -58,7 +58,7 @@ The docs structure don't change, only the `public/` files. For example, for the 
         index.md
 ```
 
-When running build for version `2.0`, the `public/` folder will look like this:
+When running the build command for version `2.0`, the `public/` folder will look like this:
 
 ```text
 - public/
@@ -70,7 +70,7 @@ When running build for version `2.0`, the `public/` folder will look like this:
             index.html
 ```
 
-Note that the public folder is never cleaned up. This allows older versions to remain unchanged. So let's say you add an `about.md` file to your english docs and run the build for version `2.1`. Your public folder will look like this:
+Note that the public folder is never cleaned up. This allows older versions to remain unchanged. So let's say you add an `about.md` file to your English docs and run the build for version `2.1`. Your public folder will look like this:
 
 ```text
 - public/
@@ -101,9 +101,9 @@ When versioning is enabled, a `versions.json` file is also created in the `publi
 
 ### Root page
 
-As I mentioned before, usually when using versions and/or locales, there are no files in the root. This is because usually you would have your regular website, and then send it to your default locale.
+As I mentioned before, when using versions and/or locales, it's common to not have files in the root. This is because usually you would have your regular website, and then send it to your default locale.
 
-However, it's a big assumption this is the most common case, and you might prefer to provide an index or a simple redirect when people access your doc's root directly.
+However, it's a big assumption that this is the most common case, and you might prefer to provide an index or a simple redirect when people access your doc's root directly.
 
 To do that, add an `index.md` to your `docs/` root, and make sure the option `generate_doc_index` is set to true in your `shromp.toml` file.
 
@@ -111,7 +111,7 @@ The reason this option exists is because the `docs/` root is shared among versio
 
 ## Folder structure and navigation
 
-You might have noticed the left-hand side menu in this page. The data for this menu is generated when building the pages and exposed to the template files so a menu like this can be built (more about this in the [theme](./2-theme.md) section).
+You might have noticed the left-hand side menu on this page. The data for this menu is generated when building the pages and exposed to the template files, so a menu like this can be built (more about this in the [theme](./2-theme.md) section).
 
 The navigation order is defined using the order in the file system, which is alphabetically sorted by default. For convenience, you can prefix your files with a number, which will be removed when creating the public path, but will allow you to keep the navigation structure as you wish. Here is an example
 
@@ -136,7 +136,7 @@ This will generate the following navigation:
             - second (/en/1.0/guides/second.html)
 ```
 
-Note that neither the locale or version is included in the navigation tree. This is because each locale has it's own tree, and versions are like a "path" variable, which should be navigated via other index.
+Note that neither the locale or the version is included in the navigation tree. This is because each locale has its own tree, and versions are like a "path" variable, which should be navigated via another index.
 
 ## Link reference
 
@@ -166,7 +166,7 @@ As with links, the reference to the images will also be updated correctly, so th
 
 ### Centering images
 
-Markdown, being focused on content, does not provide many "styling" features. However, centering an image is a very common use-case. Because of that, there is a convenience patter you can use. When adding images to your markdown file, you can add a query parameter to get it centered, like this:
+Markdown, being focused on content, does not provide many "styling" features. However, centering an image is a very common use case. Because of that, there is a pattern you can use. When adding images to your markdown file, you can add a query parameter to get it centered, like this:
 
 ```markdown
 
@@ -185,7 +185,7 @@ Shromp will translate this to:
 ```
 You can now center your image using the `img-center` class.
 
-For now this is the only styling feature available. If you have ideas, suggestions or comments, feel free to open a discussion on Github.
+For now, this is the only styling feature available. If you have ideas, suggestions or comments, feel free to open a discussion on Github.
 
 ## Metadata
 
@@ -204,7 +204,7 @@ I cover usage and the built-in options, like `template` and `page_title`, in det
 
 ## Markdown extra capabilities
 
-Shromp supports regular and Github markdown. It also includes the [extended tables](https://github.com/calculuschild/marked-extended-tables) package, which add some extra table features, such as:
+Shromp supports regular and Github markdown. It also includes the [extended tables](https://github.com/calculuschild/marked-extended-tables) package, which adds some extra table features, such as:
 
 Merging columns and rows:
 
