@@ -109,6 +109,15 @@ default_template="banana"
 		assert.equal(config.anchorPrefix(), 'sp-');
 	});
 
+	it('sets version', async () => {
+		// making sure config is clean by providing a file that does not exist
+		await loadConfig("./some-file");
+
+		config.setVersionToPublish("anything");
+
+		assert.equal(config.versionToPublish(), 'anything');
+	});
+
 	it('joins paths correctly for path configs', async () => {
 		// making sure config is clean by providing a file that does not exist
 		await loadConfig("./some-file");

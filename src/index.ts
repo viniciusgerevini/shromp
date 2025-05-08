@@ -40,14 +40,14 @@ program
 	.command("build")
 	.description("build files")
 	.option("-c, --config <path to shromp.toml>", "shromp config file")
-	.option("-v, --version <string>", "Overrides version_to_publish property from shromp.toml")
+	.option("-t, --tag <string>", "Overrides version_to_publish property from shromp.toml")
  	.action(async (options) => {
 		if (options.config && !fileExists(options.config)) {
 			logs.error(`Config file ${options.config} does not exist`);
 			program.error("");
 		}
 		try {
-			await build(options.config);
+			await build(options.config, options.tag);
 		} catch(e: any) {
 			logs.error(e.message);
 			program.error("");

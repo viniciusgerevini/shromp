@@ -6,8 +6,10 @@ import { generateHtmlForTree } from './content-conversion.ts';
 import { copyTo, createFolderIfRequired, getFileTree, pathRelativeToProcess } from './files.ts';
 import * as logs from "./logs.ts";
 
-export async function build(configFile?: string): Promise<void> {
+export async function build(configFile: string, tag: string): Promise<void> {
 	await loadConfig(configFile);
+
+	config.setVersionToPublish(tag);
 
 	logs.start("Reading source files");
 	const tree = await getFileTree(config.sourceFolder(), { excludeEmptyFolders: true });

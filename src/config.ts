@@ -23,6 +23,8 @@ interface ThemeConfig {
 let config: Config  = {};
 let themeConfig: ThemeConfig  = {};
 
+let customVersion: string | undefined;
+
 export async function loadConfig(configFile: string = "shromp.toml"): Promise<void> {
   const pathToConfig = folderPathAssemblyHelper(configFile);
   config = await readToml(pathToConfig);
@@ -69,7 +71,11 @@ export default {
    * Documentation version (files will be nested in this folder)
    */
   versionToPublish(): string {
-    return config.version_to_publish || "1.0.0";
+    return customVersion || config.version_to_publish || "1.0.0";
+  },
+
+  setVersionToPublish(v: string | undefined): void {
+    customVersion = v;
   },
 
   /**

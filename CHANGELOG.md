@@ -5,6 +5,11 @@ nav_max: 1
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 0.0.3 (2025-05-08)
+
+- Rename `--version` option in config to `--tag` to not conflict with the default version command.
+- Implemented actual version override
+
 ## 0.0.2 (2025-05-08)
 
 - Add README

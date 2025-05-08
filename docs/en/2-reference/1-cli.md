@@ -29,5 +29,5 @@ shromp build [options]
 | Option | Description |
 |---50%---|-----50%------|
 | -c, --config <path to shromp.toml> | shromp config file |
-| -v, --version <string> | Overrides version_to_publish property from shromp.toml |
+| -t, --tag <string> | Overrides version_to_publish property from shromp.toml |
 
