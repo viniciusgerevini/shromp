@@ -1,6 +1,6 @@
 {
   "name": "shromp",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "description": "A chill doc and static website generator",
   "main": "index.js",

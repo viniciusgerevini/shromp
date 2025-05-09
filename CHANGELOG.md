@@ -5,6 +5,10 @@ nav_max: 1
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 0.0.5 (2025-05-08)
+
+- Theme: fix versions request for regular baseUrl
+
 ## 0.0.4 (2025-05-08)
 
 - Make baseUrl afect navigation as well
