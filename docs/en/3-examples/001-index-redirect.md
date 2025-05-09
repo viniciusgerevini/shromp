@@ -17,9 +17,10 @@ In this guide, I will focus on Option 3, redirecting to the latest published ver
 
 ## How to redirect using a static page only
 
-There are ways to setup this redirect using your webserver, but as this is a static site let's do it the proper static way, using the [http-equiv](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Redirections#html_redirections) meta tag.
+There are ways to setup this redirect using your webserver, but as this is a static site let's do it the proper static way, using the [http-equiv](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Redirections#html_redirections) meta tag, and JavaScript's [window.location.href](https://developer.mozilla.org/en-US/docs/Web/API/Location/href).
 
 This is what that tag looks like:
+
 ```html
 
 <meta http-equiv="refresh" content="delay_time; URL=new_website_url" />
@@ -37,7 +38,13 @@ In theory, having only this tag in the page should do the trick, but let's be po
     <title>Page Redirection</title>
 </head>
 <body>
-        If you are not redirected automatically, follow this <a href='/docs/en'>link</a>.
+    <script>
+    (function() {
+        window.location.href = "/docs/en";
+    }());
+    </script>
+
+     If you are not redirected automatically, follow this <a href='/docs/en'>link</a>.
 </body>
 </html>
 ```
@@ -63,6 +70,11 @@ First, let's create a new template on `<site-theme>/templates` that will hold ou
     <title>{{pageTitle}}</title>
 </head>
 <body>
+    <script>
+    (function() {
+        window.location.href = "{{baseUrl}}/{{locale}}/{{version}}";
+    }());
+    </script>
     If you are not redirected automatically, follow this <a href='{{baseUrl}}/{{locale}}/{{version}}}}'>link</a>.
 </body>
 </html>
@@ -84,3 +96,12 @@ Now run `shromp build` and test it out. When hitting `/docs` you should be redir
 
 That's how you do it! Of course, if you are using Shromp's default theme, it's already configured like that, but it's good to know how the magic happens.
 
+## Why so many redirects?
+
+If you paid attention to the HTML code, you might have noticed that I defined the refresh tag, a redirect using javascript's `window.location.href`, and also added a link to the body. Why so many different ways?
+
+From my tests, the meta tag does work, but it's slow sometimes, showing the page for a split second before redirecting it. The JavaScript method works instantly, so it's better to use it instead.
+
+The reason I kept both was for "good practice". In the unlikely scenario javascript is disabled in the browser, the redirect still works. The link works as a fallback in the case the redirect doesn't happen at all.
+
+It is a bit overkill, but it's so simple that doesn't hurt having everything covered.

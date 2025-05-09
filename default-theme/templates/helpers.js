@@ -36,8 +36,9 @@ export function getNavClassWhenCurrent(navLink, currentFile) {
 	return navLink === currentFile ? "current" : "";
 };
 
-export function createRedirectionLink(locale, version) {
-	return [locale, version].join("/");
+export function buildLink(...args) {
+	const parts = args.filter((a) => typeof a === "string");
+	return parts.join("/").replaceAll(/\/+/g, "/");
 }
 
 export function assetImage(imageName) {
