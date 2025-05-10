@@ -1,12 +1,12 @@
 <li class="nav-item nav-level-{{level}} {{getNavCurrentState path @root.currentFilePath}}">
     {{#if children }}
-      <a href="{{path}}"><button title="Open/Close menu" class="icon-nav-toggle"></button>{{title}}</a>
+    <a href="{{path}}"><button title="Open/Close menu" class="icon-nav-toggle"></button>{{{title}}}</a>
       <ul>
         {{#each children}}
            {{> side-navigation-section }}
         {{/each}}
       </ul>
     {{else}}
-      <a href="{{path}}">{{title}}</a>
+    <a href="{{path}}">{{{title}}}</a>
     {{/if}}
 </li>
