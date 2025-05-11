@@ -5,6 +5,16 @@ nav_max: 1
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 0.0.6 (2025-05-10)
+
+- Added --no-content option to shromp init to skip sample content generation
+- Added --output option to shromp build to override output folder
+- Implemented shromp-site.toml to allow setting up site information to be used by themes
+- Implemented social tags using site info
+- Fixed site navigation and child pages displaying some characters wrong (i.e. quotes)
+- Disabled doc index in sample docs
+- Fixed issue in theme where initially expanded section required two clicks to close
+
 ## 0.0.5 (2025-05-08)
 
 - Theme: fix versions request for regular baseUrl
