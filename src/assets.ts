@@ -14,9 +14,9 @@ import {
 } from "./files.ts";
 import * as logs from "./logs.ts";
 
-type AssetFolder = "styles" | "scripts" | "images";
+type AssetFolder = "styles" | "scripts" | "images" | "content/images";
 
-interface AssetMap {
+export interface AssetMap {
 	[originalName: string]: string;
 }
 
@@ -40,17 +40,19 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 	}
 }
 
-async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<AssetMap> {
-	if (!fileExists(config.themeAssetsFolder(assetFolder))) {
+export async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<AssetMap> {
+	const rootFolder = assetFolder === "content/images" ? config.sourceFolder("images") : config.themeAssetsFolder(assetFolder);
+
+	if (!fileExists(rootFolder)) {
 		return {};
 	}
-	const files = await listFilesInDir(config.themeAssetsFolder(assetFolder));
+	const files = await listFilesInDir(rootFolder);
 
 	const assets: AssetMap = {};
 
-	if (assetFolder === "images") {
+	if (assetFolder === "images" || assetFolder === "content/images") {
 		for (let file of files) {
-			assets[file] = await copyTargetImageWithHash(file);
+			assets[file] = await copyTargetImageWithHash(file, assetFolder, rootFolder);
 		}
 		return assets;
 	}
@@ -73,14 +75,17 @@ async function createTargetFileWithHash(file: string, assetFolder: AssetFolder )
 	return fileUrl;
 }
 
-async function copyTargetImageWithHash(file: string): Promise<string> {
-	const hash = await generateHashForFile(config.themeAssetsFolder("images", file));
+async function copyTargetImageWithHash(file: string, assetFolder: string, sourceRoot: string): Promise<string> {
+	const sourceFilePath = path.join(sourceRoot, file);
+	const hash = await generateHashForFile(sourceFilePath);
 	const targetName = getNameWithHash(file, hash);
-	const fileUrl = `${config.baseUrl()}assets/images/${targetName}`;
+	const fileUrl = `${config.baseUrl()}assets/${assetFolder}/${targetName}`;
+	const targetSubFolder = assetFolder.split("/").join(path.sep); // make sure path separator is OS specific
 	await copyTo(
-		config.themeAssetsFolder("images", file),
-		config.outputFolder("assets", "images", targetName)
+		sourceFilePath,
+		config.outputFolder("assets", targetSubFolder, targetName)
 	);
+
 	logs.success(`Asset file created ${fileUrl}`);
 
 	return fileUrl;
