@@ -118,6 +118,16 @@ default_template="banana"
 		assert.equal(config.versionToPublish(), 'anything');
 	});
 
+	it('sets output folder', async () => {
+		// making sure config is clean by providing a file that does not exist
+		await loadConfig("./some-file");
+
+		config.setOutputFolder("/another-one");
+
+		assert.equal(config.outputFolder(), '/another-one');
+	});
+
+
 	it('joins paths correctly for path configs', async () => {
 		// making sure config is clean by providing a file that does not exist
 		await loadConfig("./some-file");

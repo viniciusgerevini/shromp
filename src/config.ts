@@ -92,6 +92,10 @@ export default {
     return folderPathAssemblyHelper(config.output_folder || "./public/", args);
   },
 
+  setOutputFolder(outputFolder: string | undefined): void {
+    config.output_folder = outputFolder;
+  },
+
   /**
    * Folder where handlebars templates are stored
    */

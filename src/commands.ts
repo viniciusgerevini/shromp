@@ -6,10 +6,11 @@ import { generateHtmlForTree } from './content-conversion.ts';
 import { copyTo, createFolderIfRequired, getFileTree, pathRelativeToProcess } from './files.ts';
 import * as logs from "./logs.ts";
 
-export async function build(configFile: string, tag: string): Promise<void> {
+export async function build(configFile: string, tag: string, outputFolder: string): Promise<void> {
 	await loadConfig(configFile);
 
 	config.setVersionToPublish(tag);
+	config.setOutputFolder(outputFolder);
 
 	logs.start("Reading source files");
 	const tree = await getFileTree(config.sourceFolder(), { excludeEmptyFolders: true });
@@ -21,10 +22,14 @@ export async function build(configFile: string, tag: string): Promise<void> {
 	await copyImages();
 	
 	logs.logShrimplySuccess("Build complete");
-	logs.info(`Check ${config.outputFolder()}`);
+	logs.info(`Your new files are at ${config.outputFolder()}`);
 }
 
-export async function init(targetDirectory: string | undefined): Promise<void> {
+interface InitOptions {
+	includeSampleContent: boolean;
+}
+
+export async function init(targetDirectory: string | undefined, options: InitOptions): Promise<void> {
 	logs.start("Creating project files");
 
 	if (targetDirectory) {
@@ -43,10 +48,15 @@ export async function init(targetDirectory: string | undefined): Promise<void> {
 		path.resolve(__dirname, "../default-theme"),
 		pathRelativeToProcess(destination, "default-theme")
 	);
-	await copyTo(
-		path.resolve(__dirname, "../docs"),
-		pathRelativeToProcess(destination, "docs")
-	);
+
+	if (options.includeSampleContent) {
+		await copyTo(
+			path.resolve(__dirname, "../docs"),
+			pathRelativeToProcess(destination, "docs")
+		);
+	} else {
+		logs.warn("Skipping content copy because --no-content flag was provided.");
+	}
 
 	logs.logShrimplySuccess("Project files created");
 	logs.info("- Check shromp.toml for config.");
