@@ -4,7 +4,7 @@
 import path from "node:path";
 import { ContentAnchor, ContentNode } from "./content-conversion.ts";
 import config, { loadSiteInfo, SiteInfo } from "./config.ts";
-import { copyTo, createFile, fileExists, listFilesInDir } from "./files.ts";
+import { copyTo, createFile, fileExists, listFilesInDir, listFilesInDirWithTypes } from "./files.ts";
 import Templates, { TemplatesInstance } from "./templates.ts";
 import { compileSiteAssets, SiteAssets } from "./assets.ts";
 import * as logs from "./logs.ts";
@@ -293,10 +293,12 @@ async function getAllVersions(root: NavigationLinksForLocale | string): Promise<
 }
 
 async function loadItemNamesFromFolder(rootFolder: string, items: Set<string>): Promise<void> {
-	const itemsInFolder = await listFilesInDir(config.outputFolder(rootFolder));
+	const itemsInFolder = await listFilesInDirWithTypes(config.outputFolder(rootFolder));
 
 	for (let item of itemsInFolder) {
-		items.add(item);
+		if (item.isDirectory()) {
+			items.add(item.name);
+		}
 	}
 }
 

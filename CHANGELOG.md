@@ -5,6 +5,10 @@ nav_max: 1
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 0.0.7 (2025-05-10)
+
+- Fix: version file should only include folders
+
 ## 0.0.6 (2025-05-10)
 
 - Added --no-content option to shromp init to skip sample content generation

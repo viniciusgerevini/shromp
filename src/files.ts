@@ -106,6 +106,10 @@ export async function listFilesInDir(dirPath: string): Promise<string[]> {
 	return readdir(dirPath);
 }
 
+export async function listFilesInDirWithTypes(dirPath: string): Promise<Dirent[]> {
+	return readdir(dirPath, { withFileTypes: true });
+}
+
 export async function copyTo(fromPath: string, toPath: string): Promise<void> {
 	await cp(fromPath, toPath, { recursive: true });
 }
