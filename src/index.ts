@@ -27,8 +27,8 @@ program
 program
 	.command("init")
 	.description("Initialize a shromp project with boilerplate files.")
-	.option("-d, --directory <path>", "target directory")
-	.option("--no-content", "do not generate sample content files")
+	.option("-d, --directory <path>", "Target directory to save project files")
+	.option("--no-content", "Do not generate sample content files")
 	.action(async (options) => {
 		try {
 			await init(options.directory, { includeSampleContent: options.content });
