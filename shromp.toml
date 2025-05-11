@@ -13,9 +13,6 @@ theme_folder="./default-theme/"
 # Path to asset processing file. Optional.
 asset_pipeline_file="./asset-pipeline.js"
 
-# Default template used for pages
-default_page_template="page"
-
 # Can disable doc index generation even when index.md is present
 # default: false
 generate_doc_index=false
