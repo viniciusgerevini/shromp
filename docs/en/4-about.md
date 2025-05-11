@@ -12,8 +12,8 @@ Licensed under the [MIT License](https://github.com/viniciusgerevini/shromp/blob
 
 Here are some other examples using Shromp:
 
-- Aseprite Wizard docs (Link coming soon)
-- Clyde Dialogue docs (Link coming soon)
+- [Aseprite Wizard docs](https://thisisvini.com/aseprite-wizard)
+- [Clyde Dialogue docs](https://thisisvini.com/clyde)
 - This!
 
 ## Dependencies

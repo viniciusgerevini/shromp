@@ -148,3 +148,24 @@ function folderPathAssemblyHelper(folder: string, args: string[] = []) {
   }
   return path.join(cwd, folder);
 }
+
+export interface SiteInfo {
+  title?: string;
+  description?: string;
+  image?: string;
+  locales?: {
+    [locale: string]: Omit<SiteInfo, "locales">;
+  };
+}
+
+export async function loadSiteInfo(): Promise<SiteInfo> {
+  const configPath = folderPathAssemblyHelper(config.source_folder || "./docs/", ["shromp-site.toml"]);
+
+  if (!existsSync(configPath)) {
+    return {};
+  }
+
+  const siteConfig = await readToml(configPath);
+
+  return siteConfig as SiteInfo;
+}

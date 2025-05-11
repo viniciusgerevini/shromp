@@ -3,7 +3,7 @@
  */
 import path from "node:path";
 import { ContentAnchor, ContentNode } from "./content-conversion.ts";
-import config from "./config.ts";
+import config, { loadSiteInfo, SiteInfo } from "./config.ts";
 import { copyTo, createFile, fileExists, listFilesInDir } from "./files.ts";
 import Templates, { TemplatesInstance } from "./templates.ts";
 import { compileSiteAssets, SiteAssets } from "./assets.ts";
@@ -46,20 +46,27 @@ export async function createSiteFromContent(content: ContentNode): Promise<void>
 
 	const templates = await Templates();
 
+	const siteInfo = await loadSiteInfo();
+
 	if (content.isIndex) {
-		await createDocIndexPage(content, assets, templates);
+		await createDocIndexPage(content, assets, templates, siteInfo);
 	}
 
 	logs.start("Creating pages");
 
-	await createPages(contentCache, navigationLinks, assets, templates);
+	await createPages(contentCache, navigationLinks, assets, templates, siteInfo);
 
 	if (config.isVersioningEnabled()) {
 		await updateVersionsFiles(isNavigationLinksForLocale(navigationLinks) ? navigationLinks : "/");
 	}
 }
 
-async function createDocIndexPage(content: ContentNode, assets: SiteAssets, templates: TemplatesInstance): Promise<void> {
+async function createDocIndexPage(
+	content: ContentNode,
+	assets: SiteAssets,
+	templates: TemplatesInstance,
+	siteInfo: SiteInfo
+): Promise<void> {
 	if (!config.shouldGenerateDocIndex()) {
 		logs.warn('There is an index present for the root folder, but shromp is configured to skip generation.')
 		return;
@@ -78,6 +85,7 @@ async function createDocIndexPage(content: ContentNode, assets: SiteAssets, temp
 		version: config.isVersioningEnabled() ? config.versionToPublish() : undefined,
 		assets,
 		baseUrl: config.baseUrl(),
+		site: siteInfoWithLocaleOverride(siteInfo, config.defaultLocale()),
 	}, templates);
 
 	logs.success("Root index created");
@@ -213,6 +221,7 @@ async function createPages(
 	navigationLinks: NavigationLinksForLocale | NavigationLink,
 	assets: SiteAssets,
 	templates: TemplatesInstance,
+	siteInfo: SiteInfo,
 ): Promise<void> {
 
 	for (const [filePath, content] of Object.entries(contentCache)) {
@@ -228,9 +237,17 @@ async function createPages(
 			metadata: content.metadata,
 			assets,
 			baseUrl: config.baseUrl(),
+			site: siteInfoWithLocaleOverride(siteInfo, content.locale),
 		}, templates);
 		logs.success(`Page created ${filePath}`);
 	}
+}
+
+function siteInfoWithLocaleOverride(siteInfo: SiteInfo, locale: string): any {
+	return {
+		...siteInfo,
+		...(siteInfo.locales && siteInfo.locales[locale] ? siteInfo.locales[locale] : {}),
+	};
 }
 
 async function createPage(filePath: string, content: any, templates: TemplatesInstance): Promise<void> {

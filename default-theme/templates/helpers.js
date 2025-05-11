@@ -44,3 +44,28 @@ export function buildLink(...args) {
 export function assetImage(imageName) {
 	return this.assets.images[imageName];
 }
+
+export function pageDescriptionWithFallback() {
+	return this.metadata.description || this.site.description
+}
+
+export function pageImageWithFallback() {
+	const image = this.metadata.page_image || this.site.image;
+
+	if (image || this.assets.images[image]) {
+		return this.assets.images[image];
+	}
+
+	return image;
+}
+
+export function pageKeywordsWithFallback() {
+	return this.metadata.keywords || this.site.keywords
+}
+
+export function fullPageTitle() {
+	if (this.pageTitle) {
+		return `${this.pageTitle} - ${this.site.title}`;
+	}
+	return this.site.title;
+}
