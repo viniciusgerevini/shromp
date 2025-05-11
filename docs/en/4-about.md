@@ -1,3 +1,6 @@
+<!--
+nav_max: 1
+-->
 # About
 
 Shromp was created with love by 60 hard-working shrimp and I.
