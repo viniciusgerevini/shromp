@@ -109,6 +109,11 @@ To do that, add an `index.md` to your `docs/` root, and make sure the option `ge
 
 The reason this option exists is because the `docs/` root is shared among versions, so when fixing older docs you might want to avoid replacing the newest version.
 
+## Site info
+
+You can create a [shromp-site.toml](../2-reference/3-site-info.md) file in the `docs/` root that will contain relevant site information to be used by the themes. You can set the site title, description, keywords, social image and URL in this file, as well as any other information you want to be globally available to your theme templates.
+
+
 ## Folder structure and navigation
 
 You might have noticed the left-hand side menu on this page. The data for this menu is generated when building the pages and exposed to the template files, so a menu like this can be built (more about this in the [theme](./2-theme.md) section).
