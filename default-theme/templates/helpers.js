@@ -25,7 +25,7 @@ export function getNavCurrentState(navLink, currentFile) {
 	}
 
 	if (currentFileWithoutIndex.includes(navLinkWithoutIndex)) {
-		return "loaded-expanded";
+		return "loaded-expanded expanded";
 	}
 	return "collapsed";
 }
