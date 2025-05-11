@@ -14,6 +14,7 @@ interface Config {
   enable_locales?: boolean;
   version_to_publish?: string;
   anchor_prefix?: string;
+  asset_pipeline_file?: string;
 }
 
 interface ThemeConfig {
@@ -142,6 +143,13 @@ export default {
   anchorPrefix(): string {
     return config.anchor_prefix || "sp-";
   },
+
+  assetPipelinePath(): string {
+    if (!config.asset_pipeline_file) {
+      return "";
+    }
+    return folderPathAssemblyHelper(config.asset_pipeline_file);
+  }
 }
 
 function folderPathAssemblyHelper(folder: string, args: string[] = []) {

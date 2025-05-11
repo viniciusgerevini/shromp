@@ -163,7 +163,7 @@ There is no need for mental gymnastics when linking files. We have you covered.
 
 ## Images
 
-It's not uncommon for docs and pages to have images. To keep things simple, please put any image in the `docs/assets/images/` folder. At the moment, shromp will just copy these files to `public/assets/images/` as is.
+It's not uncommon for docs and pages to have images. Put any image in the `<docs>/assets/images/` folder. Shromp will hash and copy these files to `<public>/assets/images/`.
 
 I'm still debating if I should create any form of image optimisation pipeline, but this seems like a lot of complexity and maybe better handled beforehand with your own tooling.
 

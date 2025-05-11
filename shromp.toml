@@ -10,8 +10,8 @@ output_folder="./public/"
 # Folder where site theme handlebars templates are located
 theme_folder="./default-theme/"
 
-# Default template used for pages
-default_page_template="page"
+# Path to asset processing file. Optional.
+asset_pipeline_file="./asset-pipeline.js"
 
 # Can disable doc index generation even when index.md is present
 # default: false
