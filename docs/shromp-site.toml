@@ -2,7 +2,7 @@
 title = "Shromp"
 description = "A chill static site/docs generator that shrimply works"
 keywords="site generator,static site"
-image = "icon.png"
+image = "shromp_og.png"
 url="https://thisisvini.com/shromp"
 
 # [locales.en]
