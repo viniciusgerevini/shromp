@@ -1,7 +1,7 @@
 import { describe, it, afterEach, beforeEach, mock, Mock } from 'node:test';
 import * as assert from 'node:assert';
 import mockFs from 'mock-fs';
-import config from './config.ts';
+import config, { loadConfig } from './config.ts';
 import { fileExists } from './files.ts';
 import * as assetsModule from './assets.ts';
 
@@ -190,4 +190,92 @@ describe('Assets', async () => {
 		});
 	});
 
+	describe('asset pipeline', async () => {
+		let assetPipelineModuleMock: Mock<any>;
+		let pipelineMock: Mock<assetsModule.PipelineFunction>;
+		let createTargetAssetsWithHash: typeof assetsModule.createTargetAssetsWithHash;
+		let registerAssetPipeline: typeof assetsModule.registerAssetPipeline;
+
+		beforeEach(async () => {
+			await loadConfig();
+			pipelineMock = mock.fn();
+
+			assetPipelineModuleMock = mock.module(config.assetPipelinePath(), {
+				defaultExport: (content: string, type: any, path: string) => {
+					return pipelineMock(content, type, path);
+				}
+			});
+
+			({ createTargetAssetsWithHash, registerAssetPipeline } = await import('./assets.ts'));
+
+			await registerAssetPipeline();
+		});
+
+		afterEach(async () => {
+			mockFs.restore();
+			assetPipelineModuleMock.restore();
+			pipelineMock.mock.restore();
+			await registerAssetPipeline();
+		});
+
+		it('uses assets pipeline when import is defined', async () => {
+			const originalContent = 'content 1';
+			const sourceStyleFile = config.themeAssetsFolder('styles', 'test.css');
+			const sourceScriptFile = config.themeAssetsFolder('scripts', 'test.js');
+
+			pipelineMock.mock.mockImplementation(async () => {
+				return "processed content";
+			});
+
+			mockFs({
+				[sourceStyleFile]: originalContent,
+				[sourceScriptFile]: originalContent,
+			});
+
+			const resultStyle = await createTargetAssetsWithHash('styles');
+			const resultScript = await createTargetAssetsWithHash('scripts');
+			// I'm being lazy here and instead of reading the content saved to match
+			// the content passed, I'm just checking the hash of the file, which 
+			// is also fine, given it should be reliable.
+			assert.deepEqual(resultStyle, {
+				'test.css': '/assets/styles/test.a2e3b23872.css',
+			});
+			assert.deepEqual(resultScript, {
+				'test.js': '/assets/scripts/test.a2e3b23872.js',
+			});
+			assert.deepEqual(pipelineMock.mock.calls[0].arguments, [
+				originalContent,
+				'style',
+				sourceStyleFile,
+			]);
+			assert.deepEqual(pipelineMock.mock.calls[1].arguments, [
+				originalContent,
+				'script',
+				sourceScriptFile,
+			]);
+
+			assert.equal(fileExists(config.outputFolder(resultStyle['test.css'])), true);
+			assert.equal(fileExists(config.outputFolder(resultScript['test.js'])), true);
+		});
+
+		it('uses original content when asset pipeline returns false', async () => {
+			pipelineMock.mock.mockImplementation(async () => {
+				return false;
+			});
+
+			mockFs({
+				[config.themeAssetsFolder('styles', 'test.css')]: 'content 1',
+			});
+
+			const result = await createTargetAssetsWithHash('styles');
+
+			assert.deepEqual(result, {
+				'test.css': '/assets/styles/test.bea1859e35.css',
+			});
+
+			for (let f of Object.values(result)) {
+				assert.equal(fileExists(config.outputFolder(f)), true);
+			}
+		});
+	});
 });

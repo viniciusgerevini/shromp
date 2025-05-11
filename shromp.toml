@@ -10,6 +10,9 @@ output_folder="./public/"
 # Folder where site theme handlebars templates are located
 theme_folder="./default-theme/"
 
+# Path to asset processing file. Optional.
+asset_pipeline_file="./asset-pipeline.js"
+
 # Default template used for pages
 default_page_template="page"
 

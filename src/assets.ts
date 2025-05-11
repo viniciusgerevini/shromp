@@ -26,11 +26,13 @@ export interface SiteAssets {
 	images: AssetMap;
 }
 
+type PipelineAssetType = 'style' | 'script';
+
+export type PipelineFunction = (content: string, type: PipelineAssetType, path: string) => Promise<string | false>;
+
+let pipeline: PipelineFunction;
+
 export async function compileSiteAssets(): Promise<SiteAssets> {
-	// NOTE: The only thing being done at the moment is generating a hash to append to the file name
-	// to prevents issues with caching.
-	// Some people might feel the urge to implement minification and some other optimisations. That
-	// should happen in this file, ideally exposed vai a hook.
 	logs.start("Compiling theme asset");
 
 	return {
@@ -65,7 +67,22 @@ export async function createTargetAssetsWithHash(assetFolder: AssetFolder): Prom
 }
 
 async function createTargetFileWithHash(file: string, assetFolder: AssetFolder ): Promise<string> {
-	const content = await readFileContent(config.themeAssetsFolder(assetFolder, file));
+	if (!pipeline) {
+		await registerAssetPipeline();
+	}
+
+	const sourcePath = config.themeAssetsFolder(assetFolder, file);
+	let content = await readFileContent(sourcePath);
+	const processedContent = await pipeline(
+		content,
+		assetFolder === 'styles' ? 'style' : 'script',
+		sourcePath,
+	);
+
+	if (processedContent !== false) {
+		content = processedContent;
+	}
+
 	const hash = generateHashForContent(content);
 	const targetName = getNameWithHash(file, hash);
 	const targetPath = config.outputFolder("assets", assetFolder, targetName);
@@ -96,3 +113,23 @@ function getNameWithHash(file: string, hash: string): string {
 	const basename = path.basename(file, ext);
 	return `${basename}.${hash}${ext}`;
 }
+
+export async function registerAssetPipeline() {
+	const pipelinePath = config.assetPipelinePath();
+
+	if (pipelinePath === "" || !fileExists(pipelinePath)) {
+		pipeline = async () => false;
+		return;
+	}
+
+	const pipelineImport = await import(pipelinePath);
+
+	if (!pipelineImport.default) {
+		logs.warn("Pipeline file exists, but does not export a default method");
+		pipeline = async () => false;
+		return;
+	}
+
+	pipeline = pipelineImport.default;
+}
+
