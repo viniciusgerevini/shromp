@@ -14,12 +14,12 @@ export async function build(configFile: string, tag: string, outputFolder: strin
 
 	logs.start("Reading source files");
 	const tree = await getFileTree(config.sourceFolder(), { excludeEmptyFolders: true });
+	logs.start("Copying content images");
+	const contentImages = await copyImages();
 	logs.start("Converting Markdown to HTML");
-	const contentTree = await generateHtmlForTree(tree);
+	const contentTree = await generateHtmlForTree(tree, contentImages);
 	logs.start("Creating target files");
 	await createSiteFromContent(contentTree);
-	logs.start("Copying images folder");
-	await copyImages();
 	
 	logs.logShrimplySuccess("Build complete");
 	logs.info(`Your new files are at ${config.outputFolder()}`);

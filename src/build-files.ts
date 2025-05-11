@@ -6,7 +6,7 @@ import { ContentAnchor, ContentNode } from "./content-conversion.ts";
 import config, { loadSiteInfo, SiteInfo } from "./config.ts";
 import { copyTo, createFile, fileExists, listFilesInDir, listFilesInDirWithTypes } from "./files.ts";
 import Templates, { TemplatesInstance } from "./templates.ts";
-import { compileSiteAssets, SiteAssets } from "./assets.ts";
+import { AssetMap, compileSiteAssets, createTargetAssetsWithHash, SiteAssets } from "./assets.ts";
 import * as logs from "./logs.ts";
 
 interface ContentData {
@@ -256,12 +256,12 @@ async function createPage(filePath: string, content: any, templates: TemplatesIn
 	await createFile(config.outputFolder(filePath), pageContent);
 }
 
-export async function copyImages(): Promise<void> {
+export async function copyImages(): Promise<AssetMap> {
 	if (!fileExists(config.sourceFolder("assets", "images"))) {
-		return;
+		logs.info("Content images folder does not exist. Skipping copy.");
+		return {};
 	}
-
-	await copyTo(config.sourceFolder("assets", "images"), config.outputFolder("assets", "images"));
+	return createTargetAssetsWithHash("content/images");
 }
 
 async function updateVersionsFiles(navigationLinksByLocale: NavigationLinksForLocale | string ): Promise<void> {

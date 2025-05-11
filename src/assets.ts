@@ -41,7 +41,7 @@ export async function compileSiteAssets(): Promise<SiteAssets> {
 }
 
 export async function createTargetAssetsWithHash(assetFolder: AssetFolder): Promise<AssetMap> {
-	const rootFolder = assetFolder === "content/images" ? config.sourceFolder("images") : config.themeAssetsFolder(assetFolder);
+	const rootFolder = assetFolder === "content/images" ? config.sourceFolder("assets", "images") : config.themeAssetsFolder(assetFolder);
 
 	if (!fileExists(rootFolder)) {
 		return {};

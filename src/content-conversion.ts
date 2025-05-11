@@ -5,6 +5,8 @@ import extendedTables from "marked-extended-tables";
 
 import { DirNode, FileNode, isDirNode, pathRelativeToProcess, readFileContent } from "./files.ts";
 import config from './config.ts';
+import { AssetMap } from './assets.ts';
+import path from 'node:path';
 
 export interface ContentNode { title: string;
 	pathSection: string;
@@ -26,11 +28,11 @@ export interface ContentAnchor {
 /**
  * Walk the tree converting markdown content to HTML and indexing titles and anchors
  */
-export async function generateHtmlForTree(tree: DirNode): Promise<ContentNode> {
-	return contentForNode(tree);
+export async function generateHtmlForTree(tree: DirNode, contentImages: AssetMap = {}): Promise<ContentNode> {
+	return contentForNode(tree, contentImages);
 }
 
-async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNode> {
+async function contentForNode(sourceNode: DirNode | FileNode, contentImages: AssetMap): Promise<ContentNode> {
 	if (isDirNode(sourceNode)) {
 		const dirContentNode: ContentNode = {
 			title: sourceNode.name,
@@ -44,7 +46,7 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			template: undefined,
 		};
 		if (sourceNode.hasIndex) {
-			const indexNode = await convertFileContent(pathRelativeToProcess(sourceNode.path, "index.md"));
+			const indexNode = await convertFileContent(pathRelativeToProcess(sourceNode.path, "index.md"), contentImages);
 			dirContentNode.title = indexNode.title!;
 			dirContentNode.htmlContent = indexNode.htmlContent;
 			dirContentNode.anchors = indexNode.anchors;
@@ -54,12 +56,14 @@ async function contentForNode(sourceNode: DirNode | FileNode): Promise<ContentNo
 			dirContentNode.metadata = indexNode.metadata;
 		}
 
-		dirContentNode.nestedContent = await Promise.all(sourceNode.children.map(contentForNode));
+		dirContentNode.nestedContent = await Promise.all(sourceNode.children.map(
+			(c) => contentForNode(c, contentImages),
+		));
 
 		return dirContentNode;
 	}
 
-	const contentNode = await convertFileContent(pathRelativeToProcess(sourceNode.path));
+	const contentNode = await convertFileContent(pathRelativeToProcess(sourceNode.path), contentImages);
 
 	return {
 		...contentNode,
@@ -79,7 +83,7 @@ interface ContentForFileResult {
 	metadata: ContentMetadata["keys"];
 }
 
-async function convertFileContent(filePath: string): Promise<ContentForFileResult> {
+async function convertFileContent(filePath: string, contentImages: AssetMap): Promise<ContentForFileResult> {
 	const content = await readFileContent(filePath);
 
 	let headingAnchorsMaxLevel = 3;
@@ -133,7 +137,17 @@ async function convertFileContent(filePath: string): Promise<ContentForFileResul
 				if (!img.href.startsWith(".")) {
 					return false;
 				}
-				let targetPath = img.href.replaceAll(/(\.\.\/)+/g, "/");
+
+				let absoluteLinkToFile = img.href.replaceAll(/(\.\.\/)+/g, "/");
+
+				if (path.dirname(absoluteLinkToFile).startsWith("/assets/images")) {
+					const fileName = path.basename(absoluteLinkToFile);
+					if (contentImages[fileName]) {
+						absoluteLinkToFile = contentImages[fileName];
+					}
+				}
+
+				let targetPath = config.baseUrl(absoluteLinkToFile);
 				let shouldCentralize = false;
 
 				if (targetPath.includes("?center")) {

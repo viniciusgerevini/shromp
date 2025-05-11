@@ -2,6 +2,7 @@ import { describe, it, afterEach, beforeEach, mock, Mock } from 'node:test';
 import * as assert from "node:assert";
 import { DirNode, pathRelativeToProcess, readFileContent } from './files.ts';
 import { ContentNode, generateHtmlForTree as generateHtmlForTreeOriginal } from './content-conversion.ts';
+import config from './config.ts';
 
 describe('Content conversion', async () => {
 	let readFileContentMock: Mock<typeof readFileContent> = mock.fn();
@@ -363,17 +364,46 @@ describe('Content conversion', async () => {
 
 			mockFileRead(
 				'docs/index.md',
-				'![some image](../../../assets/image.png) ![image 2](/absolute.png)'
+				'![some image](../../../assets/images/image.png) ![image 2](/absolute.png)'
 			);
 
 			const expectedContentTree = testNode({
 				title: undefined,
 				pathSection: 'docs',
-				htmlContent: '<p><img src="/assets/image.png" alt="some image" /> <img src="/absolute.png" alt="image 2"></p>\n',
+				htmlContent: `<p><img src="${config.baseUrl('/assets/images/image.png')}" alt="some image" /> <img src="${config.baseUrl('/absolute.png')}" alt="image 2"></p>\n`,
 				isIndex: true,
 			});
 
 			const contentTree = await generateHtmlForTree(fileTree);
+
+			assert.deepEqual(contentTree, expectedContentTree);
+		});
+
+		it("transforms images using path from asset map", async () => {
+			const fileTree: DirNode = {
+				name: 'docs',
+				path: './docs',
+				hasIndex: true,
+				children: []
+			};
+
+			mockFileRead(
+				'docs/index.md',
+				'![some image](../../../assets/images/image.png)'
+			);
+
+			const contentImages = {
+				"image.png": "/assets/images/content-with-hash.png",
+			};
+
+			const expectedContentTree = testNode({
+				title: undefined,
+				pathSection: 'docs',
+				htmlContent: `<p><img src="${config.baseUrl(contentImages["image.png"])}" alt="some image" /></p>\n`,
+				isIndex: true,
+			});
+
+			const contentTree = await generateHtmlForTree(fileTree, contentImages);
 
 			assert.deepEqual(contentTree, expectedContentTree);
 		});

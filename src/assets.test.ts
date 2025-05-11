@@ -110,8 +110,8 @@ describe('Assets', async () => {
 			const imageContent2 = Buffer.from([8, 6, 7, 6, 4, 1, 9]);
 
 			mockFs({
-				[config.sourceFolder('images', 'test.png')]: imageContent1,
-				[config.sourceFolder('images', 'test2.png')]: imageContent2,
+				[config.sourceFolder('assets', 'images', 'test.png')]: imageContent1,
+				[config.sourceFolder('assets', 'images', 'test2.png')]: imageContent2,
 			});
 
 			const result = await createTargetAssetsWithHash('content/images');
@@ -126,7 +126,7 @@ describe('Assets', async () => {
 			let calls = 0;
 			for (let [fileName, outputPath] of Object.entries(result)) {
 				assert.deepEqual(cpToMock.mock.calls[calls].arguments, [
-					config.sourceFolder('images', fileName),
+					config.sourceFolder('assets', 'images', fileName),
 					config.outputFolder(outputPath)
 				]);
 				calls += 1;
