@@ -1,6 +1,7 @@
 {{> header }}
 {{> side-navigation }}
-<main class="content page-doc with-menu" role="main">
+<main class="content page-doc with-menu {{metadata.page_custom_class}}" role="main">
 	{{{ mainContent }}}
+	{{> page-navigation }}
 </main>
 {{> footer }}

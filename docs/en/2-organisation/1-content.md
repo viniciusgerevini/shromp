@@ -1,3 +1,6 @@
+<!--
+page_custom_class: table-examples
+-->
 # Content files (a.k.a. /docs)
 
 The `<docs>/` folder holds your source files. Those files should be written in `markdown`, and the file structure is then mirrored in the `<public>/` folder. For example, the file `docs/en/1.0.0/introduction/index.md` will be available as `public/en/1.0.0/introduction/index.html`.
@@ -261,12 +264,11 @@ and ability to define column's width:
 ```markdown
 
 |Column One|Column Two|Column Three|
-|--10%-----|-- 40% ---|:---50%-----|
+|--10%-----|-- 40% ---|----50%-----|
+| Cell A   | Cell B   | Cell C     |
 
 ```
 
 |Column One|Column Two|Column Three|
-|--10%-----|-- 40% ---|:---50%-----|
-
-
-
+|--10%-----|-- 40% ---|----50%-----|
+| Cell A   | Cell B   | Cell C     |

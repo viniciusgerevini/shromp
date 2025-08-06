@@ -4,10 +4,9 @@ While the `/docs` folder holds the content for the site, the `/theme` folder hol
 
 ## Configuring a theme
 
-You can set your current theme configuration in the `shromp.toml` file, using the following properties:
+You can set your current theme configuration in the `shromp.toml` file using the following property:
 
 - `theme_folder="./default-theme/"` -- folder where the theme is located
-- `default_page_template="page"` -- default template to use
 
 ## Folder structure
 
