@@ -5,6 +5,11 @@ nav_max: 1
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 0.0.9 (2025-08-06)
+
+- Added example of how to add "previous" and "next" links to the website theme.
+- Fixed some doc issues and formatting
+
 ## 0.0.7 (2025-05-10)
 
 - Fix: version file should only include folders
