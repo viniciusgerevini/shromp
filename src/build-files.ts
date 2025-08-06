@@ -4,7 +4,7 @@
 import path from "node:path";
 import { ContentAnchor, ContentNode } from "./content-conversion.ts";
 import config, { loadSiteInfo, SiteInfo } from "./config.ts";
-import { copyTo, createFile, fileExists, listFilesInDir, listFilesInDirWithTypes } from "./files.ts";
+import { createFile, fileExists, listFilesInDirWithTypes } from "./files.ts";
 import Templates, { TemplatesInstance } from "./templates.ts";
 import { AssetMap, compileSiteAssets, createTargetAssetsWithHash, SiteAssets } from "./assets.ts";
 import * as logs from "./logs.ts";
